@@ -1,0 +1,40 @@
+Usuario:
+
+Atributos: ID, nombre de usuario, correo electrónico, contraseña, información de contacto (teléfono, dirección), esCuidador (booleano), calificación, etc.
+Métodos: registrar(), iniciarSesion(), cerrarSesion(), editarPerfil(), cargarDatosPersonales(), obtenerCuidadores(), obtenerCalificaciones(), etc.
+Animal:
+
+Atributos: ID, nombre, tipo (perro, gato, etc.), raza, edad, género, descripción, estado de adopción, imágenes, ubicación, fecha de publicación, etc.
+Métodos: publicar(), editar(), eliminar(), marcarComoAdoptado(), cargarUbicacion(), obtenerDetalles(), etc.
+Publicación:
+
+Atributos: ID, ID del usuario que publicó, ID del animal, fecha de publicación, estado (activo, inactivo), etc.
+Métodos: activar(), desactivar(), obtenerDetalles(), etc.
+Adopción:
+
+Atributos: ID, ID del usuario adoptante, ID del animal, fecha de adopción, estado (pendiente, completada, cancelada), etc.
+Métodos: solicitarAdopcion(), aprobarAdopcion(), rechazarAdopcion(), completarAdopcion(), etc.
+Filtro:
+
+Atributos: criterios de filtrado (ubicación, tipo de animal, etc.).
+Métodos: aplicarFiltros(), obtenerResultados(), etc.
+AnimalExtraviado:
+
+Atributos: ID, ID del usuario que publicó, detalles del animal, fecha de publicación, estado (encontrado, aún perdido), etc.
+Métodos: publicar(), editar(), eliminar(), obtenerDetalles(), etc.
+Cuidador:
+
+Atributos: ID, ID del usuario asociado, especialidad, calificación promedio, etc.
+Métodos: publicarDisponibilidad(), obtenerCalificaciones(), etc.
+Calificación:
+
+Atributos: ID, ID del usuario que califica, ID del usuario calificado, puntuación, comentario, fecha, etc.
+Métodos: dejarCalificacion(), obtenerCalificaciones(), etc.
+Publicidad:
+
+Atributos: ID, ID del usuario que publicó, contenido, fecha de publicación, etc.
+Métodos: publicar(), editar(), eliminar(), obtenerDetalles(), etc.
+Rol:
+
+Atributos: ID, nombre del rol, descripción, permisos (puede ser una lista de permisos o vincularse directamente a permisos específicos).
+Métodos: asignarRol(), desasignarRol(), obtenerPermisos(), etc.
