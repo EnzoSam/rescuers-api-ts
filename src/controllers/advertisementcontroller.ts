@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import AdvertisementService from '../srvices/advertisement.service';
+import AdvertisementService from '../services/advertisement.service';
 import IAdvertisement from '../models/iadversiment.model';
 
 class AdvertisementController {

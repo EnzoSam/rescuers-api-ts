@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import RoleService from '../../srvices/user/role.service';
+import RoleService from '../../services/user/role.service';
 
 class RoleController {
 

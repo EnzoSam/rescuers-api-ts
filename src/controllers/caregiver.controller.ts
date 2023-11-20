@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import CaregiverService from '../srvices/caregiver.service';
+import CaregiverService from '../services/caregiver.service';
 import ICaregiver from '../models/icaregiver.model';
 import ICalification from '../models/icalification.model';
 

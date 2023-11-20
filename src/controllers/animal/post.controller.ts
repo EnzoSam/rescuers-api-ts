@@ -1,7 +1,7 @@
 // PostController.ts
 
 import { Request, Response } from 'express';
-import PostService from '../../srvices/animal/post.service';
+import PostService from '../../services/animal/post.service';
 import IPost from '../../models/animals/ipost.interface';
 
 class PostController {

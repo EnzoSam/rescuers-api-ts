@@ -52,20 +52,23 @@ class UserService {
       throw new Error('El correo electrónico ya está registrado.');
     }
     // Crear el nuevo usuario con datos personales y contraseña cifrada
+
+    let emailConfirmationToken = 'hola12121333';
+
     const user =  {
       email:email,
       emailVerificationAttempts: 0,
+      emailConfirmationToken : emailConfirmationToken
     };
 
     await usersRef.push(user);
 
-    let emailConfirmationToken = 'hola12121333';
+    
     // Envía el correo electrónico de confirmación
     await emailService.sendConfirmationEmail(email, emailConfirmationToken);
   }
 
   static async confirmEmail(email: string, token: string): Promise<boolean> {
-    // Busca al usuario por su correo electrónico y token de confirmación
     const snapshot = await usersRef.orderByChild('email').equalTo(email).once('value');
     const users = snapshot.val();
 
@@ -73,14 +76,28 @@ class UserService {
       const userId = Object.keys(users)[0];
       const user = users[userId];
 
+      if (!user) {
+        throw new Error('Usuario no encontrado.');
+      }
+  
+      if (user.emailVerificationAttempts >= 5) {
+        throw new Error('El correo electrónico está bloqueado debido a demasiados intentos.');
+      }
+
       if (user.emailConfirmationToken === token) {
-        // Actualiza el estado del correo electrónico confirmado y elimina el token
         await usersRef.child(userId).update({
           emailConfirmed: true,
           emailConfirmationToken: null,
         });
 
         return true;
+      }
+      else
+      {
+        const newAttempts = user.emailVerificationAttempts + 1;
+        await usersRef.child(userId.toString()).update({
+          emailVerificationAttempts: newAttempts
+        });
       }
     }
 

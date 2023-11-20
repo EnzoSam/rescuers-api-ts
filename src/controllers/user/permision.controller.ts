@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import PermissionService from '../../srvices/user/permision.service';
+import PermissionService from '../../services/user/permision.service';
 
 class PermissionController {
   static async getAllPermissions(req: Request, res: Response): Promise<void> {

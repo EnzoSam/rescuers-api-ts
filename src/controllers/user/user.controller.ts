@@ -55,7 +55,7 @@ class UserController {
       res.status(200).json({ message: 'Usuario eliminado exitosamente.' });
     } catch (error) {
       console.error('Error al eliminar un usuario:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      res.status(500).send({ error: 'Error interno del servidor.' });
     }
   }
 
@@ -71,7 +71,8 @@ class UserController {
       }
     } catch (error) {
       console.error('Error al confirmar el correo electrónico:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      console.log(error);
+      res.status(500).send({error: error} );
     }
   }
 

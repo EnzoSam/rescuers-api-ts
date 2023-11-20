@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import AnimalService from '../../srvices/animal/animal.service';
+import AnimalService from '../../services/animal/animal.service';
 
 class AnimalController {
   static async getAllAnimals(req: Request, res: Response): Promise<void> {

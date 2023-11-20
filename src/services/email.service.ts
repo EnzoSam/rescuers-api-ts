@@ -4,6 +4,7 @@ class EmailService {
   private transporter;
 
   constructor() {
+
     this.transporter = nodemailer.createTransport({
       service: process.env.SMTP_SERVICE,
       auth: {
