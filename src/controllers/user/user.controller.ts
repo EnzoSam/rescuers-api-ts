@@ -4,18 +4,23 @@ import User from '../../models/user/iuser.interface';
 
 const secretKey = 'your-secret-key';
 import jwt from 'jsonwebtoken';
+import { handleError } from '../../handlers/error.handler';
 
 class UserController {
+
+  static test(req: Request, res: Response)
+  {
+    res.send('Controller OK!');
+  }
 
   static async registerUser(req: Request, res: Response): Promise<void> {
     try {
       const { email } = req.body;
-      await UserService.registerUser(email, '');
+      let registerResponse = await UserService.registerUser(email);
 
-      res.status(201).json({ message: 'Usuario registrado. Por favor, confirme su correo electrónico.' });
+      res.status(registerResponse.statusCode).send(registerResponse);
     } catch (error) {
-      console.error('Error al registrar un usuario:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      handleError(res, 'Error interno del servidor', error);
     }
   }
 
