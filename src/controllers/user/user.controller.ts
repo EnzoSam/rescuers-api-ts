@@ -5,6 +5,7 @@ import User from '../../models/user/iuser.interface';
 const secretKey = 'your-secret-key';
 import jwt from 'jsonwebtoken';
 import { handleError } from '../../handlers/error.handler';
+import { IResult } from '../../interfaces/iresult.interface';
 
 class UserController {
 
@@ -15,8 +16,9 @@ class UserController {
 
   static async registerUser(req: Request, res: Response): Promise<void> {
     try {
-      const { email } = req.body;
-      let registerResponse = await UserService.registerUser(email);
+      const { email, name, lastName, password } = req.body;
+      let registerResponse = await UserService.registerUser
+      (email, name, lastName, password);
 
       res.status(registerResponse.statusCode).send(registerResponse);
     } catch (error) {
@@ -49,7 +51,7 @@ class UserController {
 
     } catch (error) {
       console.error('Error al actualizar un usuario:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      handleError(res, 'Error interno del servidor', error);
     }
   }
 
@@ -60,24 +62,31 @@ class UserController {
       res.status(200).json({ message: 'Usuario eliminado exitosamente.' });
     } catch (error) {
       console.error('Error al eliminar un usuario:', error);
-      res.status(500).send({ error: 'Error interno del servidor.' });
+      handleError(res, 'Error interno del servidor', error);
     }
   }
 
   static async confirmEmail(req: Request, res: Response): Promise<void> {
     try {
+    
       const { email, token } = req.body;
-
+    
       const confirmed = await UserService.confirmEmail(email, token);
+      let result:IResult = {message:'', state:'', code: 500};
       if (confirmed) {
-        res.status(200).json({ message: 'Correo electrónico confirmado exitosamente.' });
+        result.message = 'Correo electrónico confirmado exitosamente.';
+        result.code = 200;
+        
       } else {
-        res.status(400).json({ error: 'Token de confirmación no válido.' });
+        result.message = 'Token de confirmación no válido..';
+        result.code = 400;
+        
       }
+      res.status(200).json(result);
     } catch (error) {
       console.error('Error al confirmar el correo electrónico:', error);
       console.log(error);
-      res.status(500).send({error: error} );
+      handleError(res, 'Error interno del servidor', error);
     }
   }
 
@@ -89,11 +98,11 @@ class UserController {
       if (token) {
         res.status(200).json({ token });
       } else {
-        res.status(401).json({ error: 'Credenciales incorrectas.' });
+        res.status(401).send({message: 'Credenciales incorrectas.'});
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      handleError(res, 'Error interno del servidor', error);
     }
   }
 

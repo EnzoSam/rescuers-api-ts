@@ -39,7 +39,7 @@ class UserService {
     await usersRef.child(userId.toString()).remove();
   }
 
-  static async registerUser(email: string): Promise<IInitRegisterResponse> {
+  static async registerUser(email: string, name:string, lastName:string, password:string): Promise<IInitRegisterResponse> {
 
     return new Promise(async (resolve, reject) => {
       let response:IInitRegisterResponse = {
@@ -76,8 +76,13 @@ class UserService {
 
       let emailConfirmationToken = 'hola12121333';
 
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       const user = {
         email: email,
+        name: name,
+        lastName:lastName,
+        password:hashedPassword,
         emailVerificationAttempts: 0,
         emailConfirmationToken: emailConfirmationToken
       };
@@ -164,10 +169,13 @@ class UserService {
     // Obtener el usuario por correo electrónico
     const user = await this.getUserByEmail(email);
 
-    // Verificar si el usuario existe y la contraseña coincide con el hash almacenado
-    if (user && (await bcrypt.compare(password, user.password))) {
-      // Generar y devolver el token JWT
-      return jwt.sign({ userId: user.id, email: user.email }, 'your-secret-key', { expiresIn: '1h' });
+    if(user)
+    {
+      // Verificar si el usuario existe y la contraseña coincide con el hash almacenado
+      if (user && (await bcrypt.compare(password, user.password))) {
+        // Generar y devolver el token JWT
+        return jwt.sign({ userId: user.id, email: user.email }, 'your-secret-key', { expiresIn: '1h' });
+      }
     }
 
     return null;
