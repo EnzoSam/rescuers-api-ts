@@ -11,6 +11,9 @@ router.get('/test/', (req, res) => {
 router.post('/register', UserController.registerUser);
 router.post('/confirm-email', UserController.confirmEmail);
 router.post('/login', UserController.loginUser);
+router.post('/request-reset-password', UserController.requestResetPassword);
+router.post('/change-password', UserController.changePassword);
+
 
 
 //router.use(authenticateToken);

@@ -106,6 +106,29 @@ class UserController {
     }
   }
 
+  static async requestResetPassword(req: Request, res: Response): Promise<void> {
+    try {
+      const { email } = req.body;
+
+      let r = await UserService.requesResetPassword(email);
+      res.status(r.code).json(r);
+    } catch (error) {
+      console.error('Error en la pericion de reseto de password:', error);
+      handleError(res, 'Error interno del servidor', error);
+    }
+  }
+
+  static async changePassword(req: Request, res: Response): Promise<void> {
+    try {
+      const { email, token, newPassword } = req.body;
+
+      let r = await UserService.changePassword(email, token, newPassword);
+      res.status(r.code).json(r);
+    } catch (error) {
+      console.error('Error en la pericion de cambio de password:', error);
+      handleError(res, 'Error interno del servidor', error);
+    }
+  }
 }  
 
 

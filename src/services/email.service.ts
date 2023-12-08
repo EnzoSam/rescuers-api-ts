@@ -20,10 +20,21 @@ class EmailService {
       from: process.env.SMTP_MAIL,
       to,
       subject: 'Confirmación de registro',
-      text: `Por favor, haga clic en el siguiente enlace para confirmar su registro: http://your-app-url/confirm-email?email=${to}&token=${token}`,
+      text: `Por favor, haga clic en el siguiente enlace para confirmar su registro: ${process.env.FRONT_URL}verify-email/${to}/${token}`,
     };
 
-    // Envía el correo electrónico
+    await this.transporter.sendMail(mailOptions);
+  }
+
+  async sendMail(to: string, subject:string, body: string): Promise<void> {
+
+    const mailOptions = {
+      from: process.env.SMTP_MAIL,
+      to,
+      subject: subject,
+      text: body
+    };
+
     await this.transporter.sendMail(mailOptions);
   }
 }

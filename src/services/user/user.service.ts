@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs'
 let emailService = new EmailService();
 import jwt from 'jsonwebtoken';
 import { IInitRegisterResponse } from '../../interfaces/initregisterresponse.interface';
+import { IResult } from '../../interfaces/iresult.interface';
 
 const db = admin.database();
 const usersRef = db.ref('users');
@@ -39,66 +40,63 @@ class UserService {
     await usersRef.child(userId.toString()).remove();
   }
 
-  static async registerUser(email: string, name:string, lastName:string, password:string): Promise<IInitRegisterResponse> {
+  static async registerUser(email: string, name: string, lastName: string, password: string): Promise<IInitRegisterResponse> {
 
     return new Promise(async (resolve, reject) => {
-      let response:IInitRegisterResponse = {
+      let response: IInitRegisterResponse = {
         statusCode: 0,
-        message:''
+        message: ''
       }
-      try{
+      try {
 
-      // Verificar si el correo electrónico está bloqueado
-      const blockedUsers = await usersRef.orderByChild('emailVerificationAttempts').equalTo(5).once('value');
-      if (blockedUsers.exists()) {
-        response.statusCode = 500;
-        response.message = 'El correo electrónico está bloqueado debido a demasiados intentos.'
-        reject(response);
-        return;
-      }
+        // Verificar si el correo electrónico está bloqueado
+        const blockedUsers = await usersRef.orderByChild('emailVerificationAttempts').equalTo(5).once('value');
+        if (blockedUsers.exists()) {
+          response.statusCode = 500;
+          response.message = 'El correo electrónico está bloqueado debido a demasiados intentos.'
+          reject(response);
+          return;
+        }
 
-      // Verificar si el correo electrónico ya está registrado
-      const existingUser = await this.getUserByEmail(email);
-      if (existingUser) {
-        if((existingUser as User).emailConfirmed)
-        {
-          response.statusCode = 290;
-          response.message = 'El correo electrónico ya está registrado y el email verificado.';
+        // Verificar si el correo electrónico ya está registrado
+        const existingUser = await this.getUserByEmail(email);
+        if (existingUser) {
+          if ((existingUser as User).emailConfirmed) {
+            response.statusCode = 290;
+            response.message = 'El correo electrónico ya está registrado y el email verificado.';
+          }
+          else {
+            response.statusCode = 291;
+            response.message = 'El correo electrónico ya está registrado. Pero debe verifcar el email.';
+          }
+          resolve(response);
+          return;
         }
-        else
-        {
-          response.statusCode = 291;
-          response.message = 'El correo electrónico ya está registrado. Pero debe verifcar el email.';
-        }
+
+        let emailConfirmationToken = 'hola12121333';
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const user = {
+          email: email,
+          name: name,
+          lastName: lastName,
+          password: hashedPassword,
+          emailVerificationAttempts: 0,
+          emailConfirmationToken: emailConfirmationToken
+        };
+
+        await usersRef.push(user);
+        await emailService.sendConfirmationEmail(email, emailConfirmationToken);
+        response.statusCode = 200;
+        response.message = 'Inicio de registro correcto. Verificar correo electrónico para continuar.'
         resolve(response);
-        return;
       }
-
-      let emailConfirmationToken = 'hola12121333';
-
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      const user = {
-        email: email,
-        name: name,
-        lastName:lastName,
-        password:hashedPassword,
-        emailVerificationAttempts: 0,
-        emailConfirmationToken: emailConfirmationToken
-      };
-
-      await usersRef.push(user);
-      await emailService.sendConfirmationEmail(email, emailConfirmationToken);
-      response.statusCode = 200;
-      response.message = 'Inicio de registro correcto. Verificar correo electrónico para continuar.'
-      resolve(response);
-    }
-    catch(ex:any)
-    {
-      response.statusCode = 500;
-      response.message = ex.message;
-      reject(response);
-    }
+      catch (ex: any) {
+        response.statusCode = 500;
+        response.message = ex.message;
+        reject(response);
+      }
     });
   }
 
@@ -169,18 +167,81 @@ class UserService {
     // Obtener el usuario por correo electrónico
     const user = await this.getUserByEmail(email);
 
-    if(user)
-    {
+    if (user) {
       // Verificar si el usuario existe y la contraseña coincide con el hash almacenado
       if (user && (await bcrypt.compare(password, user.password))) {
         // Generar y devolver el token JWT
-        return jwt.sign({ userId: user.id, email: user.email }, 'your-secret-key', { expiresIn: '1h' });
+        return jwt.sign({ userId: user.id, email: user.email }, 
+           process.env.JWT_SECRET || '1a1aa4a5a5::;;;', { expiresIn: '120d' });
       }
     }
 
     return null;
   }
 
+  static async requesResetPassword(email: string): Promise<IResult> {
+    const user = await this.getUserByEmail(email);
+    let result: IResult = {
+      code: 0,
+      message: '',
+      state: ''
+    }
+    if (user) {
+
+      const token = jwt.sign({ email }, process.env.JWT_SECRET || '1a1aa4a5a5::;;;', { expiresIn: '1h' });
+
+      await usersRef.child(user.id.toString()).update({
+        emailConfirmationToken: token
+      });
+
+      await emailService.sendConfirmationEmail(email, token);
+      result.code = 200;
+      result.message = 'Email de reseteo enviado. Revise el correo para reestablecer la contraseña';
+    }
+    else {
+      result.code = 400;
+      result.message = 'El email no esta registrado';
+    }
+
+    return result;
+  }
+
+  static async changePassword(email: string, token: string, newPassword: string): Promise<IResult> {
+    const user = await this.getUserByEmail(email);
+    let result: IResult = {
+      code: 0,
+      message: '',
+      state: ''
+    }
+    if (user) {
+
+
+      const decodedToken = jwt.verify(token,  process.env.JWT_SECRET || '1a1aa4a5a5::;;;') as { email: string };
+      if(decodedToken.email === email)
+      {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+  
+        await usersRef.child(user.id.toString()).update({
+          emailConfirmationToken: hashedPassword
+        });
+  
+        await emailService.sendMail(email, "Cambio de password", "El cambio de password se realizó correctamente.");
+        result.code = 200;
+        result.message = 'Password actualizado';
+      }
+      else
+      {
+        result.code = 500;
+        result.message = 'El token no es valido';
+      }
+    }
+    else {
+      result.code = 400;
+      result.message = 'El email no esta registrado';
+    }
+
+    return result;
+  }
 
 }
 
