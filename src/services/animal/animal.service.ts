@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import Animal from '../../models/animals/ianimal.interface';
-import IAttribute from '../../models/iatribute.model';
+import IAttribute from '../../models/general/iatribute.model';
 
 const db = admin.database();
 const animalsRef = db.ref('animals');
@@ -29,21 +29,21 @@ class AnimalService {
   static async deleteAnimal(animalId: string): Promise<void> {
     await animalsRef.child(animalId).remove();
   }
+/*
   static async getAnimalsByAttributes(attributes: IAttribute[]): Promise<Animal[]> {
     const allAnimals = await AnimalService.getAllAnimals();
-
+/*
     // Filtrar animales que coincidan con todos los atributos proporcionados
     const filteredAnimals = allAnimals.filter((animal) =>
       attributes.every((attribute) =>
         animal.attributes?.some((animalAttribute) =>
-          animalAttribute.name === attribute.name && animalAttribute.group === attribute.group
         )
       )
     );
 
     return filteredAnimals;
   }
-
+*/
   static async uploadImages(animalId: string, imageBuffers: Buffer[]): Promise<string[]> {
     const imageUrls: string[] = [];
 

@@ -1,16 +1,14 @@
-import IAttribute from "../iatribute.model";
+import IAnimalAttribute from "./ianimalAtribute.interface";
 
 interface Animal {
-    id?: string;
-    name?: string;
-    species?: string;
-    breed?: string;
-    age?: number;
-    description: string;
-    availableForAdoption: boolean;
-    lost: boolean;
-    ownerId?: string; 
-    attributes?: IAttribute[];
+    id?: string
+    name: string
+    datebird:Date
+    description: string
+    availableForAdoption: boolean
+    lost: boolean
+    ownerId: string
+    attributes: IAnimalAttribute[];
   }
   
   export default Animal;

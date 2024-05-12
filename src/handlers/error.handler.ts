@@ -1,8 +1,13 @@
 import { Response } from "express";
 
-const handleError = (res: Response, error: string, errorRaw?: any) => {
+const handleErrorGeneric = (res: Response, error: string, errorRaw?: any) => {
   console.log(errorRaw);
-  res.status(500).send({ message: error, data:errorRaw });
+  res.status(500).json({ message: error, data:errorRaw, statusCode: 500 });
 };
 
-export { handleError };
+const handleError = (res: Response, code:number, message: string, errorRaw?: any) => {
+  console.log(errorRaw);
+  res.status(code).json({ message, data:errorRaw, statusCode: code });
+};
+
+export { handleError,handleErrorGeneric };

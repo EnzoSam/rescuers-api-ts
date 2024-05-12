@@ -4,7 +4,7 @@ import User from '../../models/user/iuser.interface';
 
 const secretKey = 'your-secret-key';
 import jwt from 'jsonwebtoken';
-import { handleError } from '../../handlers/error.handler';
+import { handleError, handleErrorGeneric } from '../../handlers/error.handler';
 import { IResult } from '../../interfaces/iresult.interface';
 
 class UserController {
@@ -22,7 +22,7 @@ class UserController {
 
       res.status(registerResponse.statusCode).send(registerResponse);
     } catch (error) {
-      handleError(res, 'Error interno del servidor', error);
+      handleErrorGeneric(res, 'Error interno del servidor', error);
     }
   }
 
@@ -51,7 +51,7 @@ class UserController {
 
     } catch (error) {
       console.error('Error al actualizar un usuario:', error);
-      handleError(res, 'Error interno del servidor', error);
+      handleErrorGeneric(res, 'Error interno del servidor', error);
     }
   }
 
@@ -62,7 +62,7 @@ class UserController {
       res.status(200).json({ message: 'Usuario eliminado exitosamente.' });
     } catch (error) {
       console.error('Error al eliminar un usuario:', error);
-      handleError(res, 'Error interno del servidor', error);
+      handleErrorGeneric(res, 'Error interno del servidor', error);
     }
   }
 
@@ -86,7 +86,7 @@ class UserController {
     } catch (error) {
       console.error('Error al confirmar el correo electrónico:', error);
       console.log(error);
-      handleError(res, 'Error interno del servidor', error);
+      handleErrorGeneric(res, 'Error interno del servidor', error);
     }
   }
 
@@ -102,7 +102,7 @@ class UserController {
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      handleError(res, 'Error interno del servidor', error);
+      handleErrorGeneric(res, 'Error interno del servidor', error);
     }
   }
 
@@ -114,7 +114,7 @@ class UserController {
       res.status(r.code).json(r);
     } catch (error) {
       console.error('Error en la pericion de reseto de password:', error);
-      handleError(res, 'Error interno del servidor', error);
+      handleErrorGeneric(res, 'Error interno del servidor', error);
     }
   }
 
@@ -126,7 +126,7 @@ class UserController {
       res.status(r.code).json(r);
     } catch (error) {
       console.error('Error en la pericion de cambio de password:', error);
-      handleError(res, 'Error interno del servidor', error);
+      handleErrorGeneric(res, 'Error interno del servidor', error);
     }
   }
 }  

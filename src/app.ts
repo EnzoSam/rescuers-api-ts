@@ -5,6 +5,7 @@ import advertisementRoutes from './routes/advertisement.route';
 import animalRoutes from './routes/animal.route';
 import caregiverRoutes from './routes/caregiver.route';
 import postRoutes from './routes/post.route';
+import atributesRoutes from './routes/atribute.route';
 import cors from "cors";
 
 const app = express();
@@ -18,6 +19,7 @@ app.use('/api/advertisement', advertisementRoutes);
 app.use('/api/animal', animalRoutes);
 app.use('/api/caregiver', caregiverRoutes);
 app.use('/api/post', postRoutes);
+app.use('/api/atributes', atributesRoutes);
 
 
 export {app};

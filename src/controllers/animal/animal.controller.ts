@@ -49,8 +49,8 @@ class AnimalController {
   static async getAnimalsByAttributes(req: Request, res: Response): Promise<void> {
     try {
       const { attributes } = req.body;
-      const animals = await AnimalService.getAnimalsByAttributes(attributes);
-      res.status(200).json({ animals });
+     // const animals = await AnimalService.getAnimalsByAttributes(attributes);
+     // res.status(200).json({ animals });
     } catch (error) {
       console.error('Error al obtener animales por atributos:', error);
       res.status(500).json({ error: 'Error interno del servidor.' });
