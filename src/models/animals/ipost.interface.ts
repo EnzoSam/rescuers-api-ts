@@ -1,5 +1,6 @@
-interface IPost {
-    id?: string;
+import { BaseModel } from "../base/base.model";
+
+interface IPost  extends BaseModel{
     contenido: string;
     autorId: string;
     fechaCreacion?: string; 

@@ -1,5 +1,6 @@
-interface IAttribute {
-  id:any
+import { BaseModel } from "../base/base.model";
+
+interface IAttribute extends BaseModel{
   name: string
   group: string
   image:string

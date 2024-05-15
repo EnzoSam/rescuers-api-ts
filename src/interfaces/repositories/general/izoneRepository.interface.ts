@@ -1,0 +1,7 @@
+import { IZone } from "../../../models/general/izone.model";
+import { IBaseRepository } from "../irepository.interface";
+
+export interface IZoneRepository extends IBaseRepository<IZone>
+{
+
+}

@@ -1,12 +1,19 @@
 import { Request, Response } from 'express';
-import Service from '../../services/general/zone.service';
 import { handleResponse, handleOK, handleCreatedOk,handleResOK } from '../../handlers/response.handler';
 import { handleError, handleErrorGeneric } from '../../handlers/error.handler';
+import ZoneService from '../../services/general/zone.service';
 
 class ZoneController {
-  static async getAll(req: Request, res: Response): Promise<void> {
+
+  service:ZoneService;
+  constructor(_zoneService:ZoneService)
+  {
+      this.service = _zoneService;
+  }
+
+  async getAll(req: Request, res: Response): Promise<void> {
     try {
-      const all = await Service.getAll();
+      const all = await this.service.getAll();
       handleOK(res, all);
     } catch (error) {
       console.error('Error al obtener zonas:', error);
@@ -14,10 +21,10 @@ class ZoneController {
     }
   }
 
-  static async create(req: Request, res: Response): Promise<void> {
+  async create(req: Request, res: Response): Promise<void> {
     try {
       const atribute = req.body;
-      let created = await Service.create(atribute);
+      let created = await this.service.create(atribute);
       handleCreatedOk(res, created);
     } catch (error) {
       console.error('Error al crear un atributo:', error);
@@ -25,11 +32,11 @@ class ZoneController {
     }
   }
 
-  static async update(req: Request, res: Response): Promise<void> {
+  async update(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const updates = req.body;
-      await Service.update(id, updates);
+      await this.service.update(id, updates);
       handleOK(res, updates);
     } catch (error) {
       console.error('Error al actualizar un atributo:', error);
@@ -37,10 +44,10 @@ class ZoneController {
     }
   }
 
-  static async delete(req: Request, res: Response): Promise<void> {
+  async delete(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      await Service.delete(id);
+      await this.service.delete(id);
       res.status(200).json({ message: 'Atributo eliminado exitosamente.' });
       handleResOK(res);
     } catch (error) {
@@ -49,7 +56,7 @@ class ZoneController {
     }
   }
 
-  static async uploadImages(req: Request, res: Response): Promise<void> {
+  async uploadImages(req: Request, res: Response): Promise<void> {
     try {
       const atributeId = req.params.atributeId;
 

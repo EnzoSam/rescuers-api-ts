@@ -1,7 +1,7 @@
+import { BaseModel } from "../base/base.model";
 import IAnimalAttribute from "./ianimalAtribute.interface";
 
-interface Animal {
-    id?: string
+interface Animal extends BaseModel {
     name: string
     datebird:Date
     description: string

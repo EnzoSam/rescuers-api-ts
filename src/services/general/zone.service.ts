@@ -1,40 +1,30 @@
-import * as admin from 'firebase-admin';
-import {IZone} from '../../models/general/izone.model';
-
-const db = admin.database();
-const zoneRef = db.ref('zones');
+import { IZone } from '../../models/general/izone.model';
+import { IZoneRepository } from '../../interfaces/repositories/general/izoneRepository.interface';
 
 class ZoneService {
 
-  static async getAll(): Promise<IZone[]> {
-    const snapshot = await zoneRef.once('value');
-    let list:IZone[] = [];
-    //const atributes: IAttribute[] = snapshot.val() || [];
-    
-    await snapshot.forEach(childSnapshot=> {
-      //var key = childSnapshot.key;
-      var atr = childSnapshot.val();
-      list.push(atr);
-  });
+  repository: IZoneRepository;
 
-    return list;
+  constructor(_repository: IZoneRepository) {
+    this.repository = _repository;
   }
 
-  static async create(zone: IZone): Promise<void> {
-    const atrRef = await zoneRef.push(zone);
-    const id = atrRef.key;
+  async getAll(): Promise<IZone[]> {
 
-    if (id) {
-      await zoneRef.child(id).update({ id: id });
-    }
+    const allItems = await this.repository.getAll();
+    return allItems;
   }
 
-  static async update(id: string, updates: Partial<IZone>): Promise<void> {
-    await zoneRef.child(id).update(updates);
+  async create(zone: IZone): Promise<void> {
+    const atrRef = await this.repository.create(zone);
   }
 
-  static async delete(id: string): Promise<void> {
-    await zoneRef.child(id).remove();
+  async update(id: string, updates: Partial<IZone>): Promise<void> {
+    await this.repository.update(id, updates);
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.repository.delete(id);
   }
 }
 

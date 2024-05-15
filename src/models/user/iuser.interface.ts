@@ -1,5 +1,6 @@
-interface User {
-    id: number;
+import { BaseModel } from "../base/base.model";
+
+interface User extends BaseModel{
     name: string;
     lastName: string;
     email: string;

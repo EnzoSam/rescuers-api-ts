@@ -1,5 +1,6 @@
-interface ICalification {
-    id?: string;
+import { BaseModel } from "./base/base.model";
+
+interface ICalification extends BaseModel {
     userId: string; 
     ratedUserId: string;
     score: number;
