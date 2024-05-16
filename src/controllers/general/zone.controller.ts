@@ -48,10 +48,8 @@ class ZoneController {
     try {
       const { id } = req.params;
       await this.service.delete(id);
-      res.status(200).json({ message: 'Atributo eliminado exitosamente.' });
       handleResOK(res);
     } catch (error) {
-      console.error('Error al eliminar un atributo:', error);
       handleErrorGeneric(res, "Error interno del servidor.", error);
     }
   }
