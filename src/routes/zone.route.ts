@@ -17,8 +17,10 @@ const controller = new ZoneController(service);
 
 router.use(authenticateToken);
 router.get('/', controller.getAll.bind(controller));
+router.get('/childs/:parentId', controller.getByParent.bind(controller));
+router.get('/:id', controller.get.bind(controller));
 router.post('/', controller.create.bind(controller));
-//router.put('/:id', controller.get.bind(controller));
+router.put('/', controller.update.bind(controller));
 router.delete('/:id', controller.delete.bind(controller));
 
 

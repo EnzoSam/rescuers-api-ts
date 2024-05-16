@@ -2,8 +2,8 @@ import * as admin from 'firebase-admin';
 import { IBaseRepository } from '../interfaces/repositories/irepository.interface';
 
 export class BaseFirebaseRepository<T> implements IBaseRepository<T>{
-    private db: admin.database.Database;
-    private ref: admin.database.Reference;
+    protected db: admin.database.Database;
+    protected ref: admin.database.Reference;
 
     constructor(private path: string) {
         this.db = admin.database();
@@ -23,9 +23,21 @@ export class BaseFirebaseRepository<T> implements IBaseRepository<T>{
     }
 
     async create(data: T, id?: string): Promise<string> {
-        const newItemRef = id ? this.ref.child(id) : this.ref.push();
-        await newItemRef.set(data);
-        return newItemRef.key || '';
+        if(id)
+        {
+            const newItemRef = id ? this.ref.child(id) : this.ref.push();
+            await newItemRef.set(data);        
+            return newItemRef.key || '';
+        }
+        else
+        {
+            const atrRef = await this.ref.push(data);
+            const id = atrRef.key;    
+            if (id) {
+              await this.ref.child(id).update({ id: id });
+            }
+            return id || '';
+        }
     }
 
     async update(id: string, data: Partial<T>): Promise<void> {

@@ -20,6 +20,17 @@ class ZoneController {
       handleErrorGeneric(res, "Error interno del servidor.", error);
     }
   }
+  async get(req: Request, res: Response): Promise<void> {
+    try {
+
+      const { id } = req.params;
+      const unique = await this.service.getById(id);
+      handleOK(res, unique);
+    } catch (error) {
+      console.error('Error al obtener zona por id.', error);
+      handleErrorGeneric(res, "Error interno del servidor.", error);
+    }
+  }
 
   async create(req: Request, res: Response): Promise<void> {
     try {
@@ -33,9 +44,9 @@ class ZoneController {
   }
 
   async update(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.params;
+    try {      
       const updates = req.body;
+      const { id } = updates;
       await this.service.update(id, updates);
       handleOK(res, updates);
     } catch (error) {
@@ -50,6 +61,17 @@ class ZoneController {
       await this.service.delete(id);
       handleResOK(res);
     } catch (error) {
+      handleErrorGeneric(res, "Error interno del servidor.", error);
+    }
+  }
+
+  async getByParent(req: Request, res: Response): Promise<void> {
+    try {
+      const { parentId } = req.params;
+      const all = await this.service.getByParent(parentId);
+      handleOK(res, all);
+    } catch (error) {
+      console.error('Error al obtener zonas:', error);
       handleErrorGeneric(res, "Error interno del servidor.", error);
     }
   }

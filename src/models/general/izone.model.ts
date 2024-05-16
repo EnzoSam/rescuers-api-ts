@@ -4,5 +4,5 @@ export interface IZone extends BaseModel {
     name: string
     code: string
     zoneType:string,
-    idMasterZone?:any
+    parentZoneId?:any
   }

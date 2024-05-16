@@ -3,5 +3,5 @@ import { IBaseRepository } from "../irepository.interface";
 
 export interface IZoneRepository extends IBaseRepository<IZone>
 {
-
+    getByParent(parentId:any):Promise<IZone[]>
 }
