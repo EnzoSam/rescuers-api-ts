@@ -1,10 +1,18 @@
 import { Request, Response } from 'express';
 import Service from '../../services/general/atribute.service';
 import { handleResponse, handleOK, handleCreatedOk, handleResOK } from '../../handlers/response.handler';
-import { handleError } from '../../handlers/error.handler';
+import { handleError, handleErrorGeneric } from '../../handlers/error.handler';
+import { IFileUploader } from '../../interfaces/services/IFileUploader.interface';
 
 class AtributeController {
-  static async getAll(req: Request, res: Response): Promise<void> {
+
+  uploader:IFileUploader;
+  constructor(_uploader:IFileUploader)
+  {
+    this.uploader = _uploader;
+  }
+
+  async getAll(req: Request, res: Response): Promise<void> {
     try {
       const all = await Service.getAll();
       handleOK(res, all);
@@ -14,7 +22,7 @@ class AtributeController {
     }
   }
 
-  static async create(req: Request, res: Response): Promise<void> {
+  async create(req: Request, res: Response): Promise<void> {
     try {
       const atribute = req.body;
       let created = await Service.create(atribute);
@@ -25,7 +33,7 @@ class AtributeController {
     }
   }
 
-  static async update(req: Request, res: Response): Promise<void> {
+  async update(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const updates = req.body;
@@ -37,7 +45,7 @@ class AtributeController {
     }
   }
 
-  static async delete(req: Request, res: Response): Promise<void> {
+  async delete(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       await Service.delete(id);
@@ -49,7 +57,7 @@ class AtributeController {
     }
   }
 
-  static async uploadImages(req: Request, res: Response): Promise<void> {
+  async uploadImages(req: Request, res: Response): Promise<void> {
     try {
 
       if (req.file) {
@@ -60,13 +68,12 @@ class AtributeController {
           return;
         }
 
-        // Sube las imágenes a Firebase Storage
-        const imageUrls = await Service.uploadFile(req.file);
+        const imageUrls = await this.uploader.uploadFile(req.file, 'atributes');
         handleOK(res, imageUrls)
       }
     } catch (error) {
       console.error('Error al cargar las imágenes:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      handleErrorGeneric(res, 'Error al subir imagen', error);
     }
   }
 }
