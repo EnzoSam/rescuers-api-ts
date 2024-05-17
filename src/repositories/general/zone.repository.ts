@@ -2,7 +2,8 @@ import { IZoneRepository } from "../../interfaces/repositories/general/izoneRepo
 import { IZone } from "../../models/general/izone.model";
 import { BaseFirebaseRepository } from "../baseFirebase.repository";
 
-export class ZoneRepository extends BaseFirebaseRepository<IZone> implements IZoneRepository {
+export class ZoneRepository 
+extends BaseFirebaseRepository<IZone> implements IZoneRepository {
     
     async getByParent(parentId: any): Promise<IZone[]> {
         const snapshot =
@@ -11,5 +12,13 @@ export class ZoneRepository extends BaseFirebaseRepository<IZone> implements IZo
         const data = snapshot.val();
         return data ? Object.values(data) : [];        
     }
+
+    async getRoots(): Promise<IZone[]> {
+        const snapshot =
+         await this.ref.orderByChild('parentZoneId')
+                        .equalTo(null).once('value');
+        const data = snapshot.val();
+        return data ? Object.values(data) : [];        
+    }    
    
 }

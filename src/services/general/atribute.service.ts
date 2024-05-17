@@ -1,9 +1,10 @@
 import * as admin from 'firebase-admin';
 import IAttribute from '../../models/general/iatribute.model';
+import bcrypt from 'bcryptjs'
 
 const db = admin.database();
 const atributeRef = db.ref('atributes');
-const storage = admin.storage().bucket('atributes');
+const storage = admin.storage().bucket();
 
 class AtributeService {
 
@@ -38,36 +39,26 @@ class AtributeService {
     await atributeRef.child(id).remove();
   }
 
-  static async uploadImages(atributeId: string, imageBuffers: Buffer[]): Promise<string[]> {
-    const imageUrls: string[] = [];
+  static async uploadFile(file: Express.Multer.File): Promise<any> {
+    const fileName =  await bcrypt.hash(file.originalname, 10);    
+    const fullPath = 'atributes/' + fileName;
+    const bucketFile = storage.file(fullPath);
+  
+    await bucketFile.save(file.buffer, {
+      contentType: file.mimetype,
+      gzip: true
+    });
+  
+    const [url] = await bucketFile.getSignedUrl({
+      action: "read",
+      expires: "01-01-2050"
+    });
 
-    for (const [index, imageBuffer] of imageBuffers.entries()) {
-      if (imageBuffer.length > 1024 * 1024) {
-        // Imagen demasiado grande
-        throw new Error(`La imagen ${index + 1} excede el límite de tamaño.`);
-      }
+    await storage.file(fullPath).makePublic();
 
-      const fileName = `${atributeId}_image_${index + 1}.jpg`;
-      const file = storage.file(fileName);
-
-      await file.save(imageBuffer, {
-        metadata: {
-          contentType: 'image/jpeg',
-        },
-      });
-
-      // Obtén la URL de descarga de la imagen
-      const [url] = await file.getSignedUrl({ action: 'read', expires: '03-09-2491' }); // Ajusta la fecha de caducidad según tus necesidades
-
-      imageUrls.push(url);
-    }
-
-    return imageUrls;
+    return {url, fullPath, name:fileName};
   }
-
-  static async updateImageURLs(atributeId: string, imageUrls: string[]): Promise<void> {
-    await atributeRef.child(atributeId).update({ imageUrls });
-  }
+    
 }
 
 export default AtributeService;

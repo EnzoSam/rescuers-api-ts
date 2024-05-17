@@ -1,5 +1,6 @@
 export const AtributesGroup =
 {
-    Size:"Size",
-    Gender:"Gender"
+    Size:"size",
+    Gender:"gender",
+    Type:"type"
 }

@@ -20,6 +20,17 @@ class ZoneController {
       handleErrorGeneric(res, "Error interno del servidor.", error);
     }
   }
+
+  async getRoots(req: Request, res: Response): Promise<void> {
+    try {
+      const all = await this.service.getRoots();
+      handleOK(res, all);
+    } catch (error) {
+      console.error('Error al obtener zonas:', error);
+      handleErrorGeneric(res, "Error interno del servidor.", error);
+    }
+  }
+
   async get(req: Request, res: Response): Promise<void> {
     try {
 

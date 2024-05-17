@@ -4,7 +4,7 @@ import fbconfig from './src/database/firebaseconfig';
 fbconfig();
 import {app} from "./src/app";
 
-var PORT = process.env.PORT || 3999;
+var PORT = process.env.PORT || 3991;
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);

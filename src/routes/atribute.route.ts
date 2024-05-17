@@ -15,7 +15,7 @@ router.get('/', AtributeController.getAll);
 router.post('/', AtributeController.create);
 router.put('/:id', AtributeController.update);
 router.delete('/:id', AtributeController.delete);
-router.post('/:id/upload-images', upload.array('images', 5), AtributeController.uploadImages);
+router.post('/uploads', upload.single('file'), AtributeController.uploadImages);
 
 
 export default router;

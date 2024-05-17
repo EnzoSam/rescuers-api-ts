@@ -17,6 +17,7 @@ const controller = new ZoneController(service);
 
 router.use(authenticateToken);
 router.get('/', controller.getAll.bind(controller));
+router.get('/roots', controller.getRoots.bind(controller));
 router.get('/childs/:parentId', controller.getByParent.bind(controller));
 router.get('/:id', controller.get.bind(controller));
 router.post('/', controller.create.bind(controller));

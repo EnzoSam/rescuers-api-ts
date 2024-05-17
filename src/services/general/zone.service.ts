@@ -15,6 +15,13 @@ class ZoneService {
     return allItems;
   }
 
+  
+  async getRoots(): Promise<IZone[]> {
+
+    const allItems = await this.repository.getRoots();
+    return allItems;
+  }
+
   async getByParent(parentId:any): Promise<IZone[]> {
 
     const allItems = await this.repository.getByParent(parentId);

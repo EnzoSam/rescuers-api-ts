@@ -5,7 +5,7 @@ const handleResponse = (res: Response, code: number, message:string, data:any) =
   };
 
   const handleOK = (res: Response,  data:any) => {
-    res.status(200).json({ message : 'Ok', data, statusCode:200 });
+    res.status(200).json({ message : 'Ok', data:data, statusCode:200 });
   };  
 
   const handleResOK = (res: Response) => {

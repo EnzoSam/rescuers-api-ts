@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Service from '../../services/general/atribute.service';
-import { handleResponse, handleOK, handleCreatedOk,handleResOK } from '../../handlers/response.handler';
+import { handleResponse, handleOK, handleCreatedOk, handleResOK } from '../../handlers/response.handler';
+import { handleError } from '../../handlers/error.handler';
 
 class AtributeController {
   static async getAll(req: Request, res: Response): Promise<void> {
@@ -50,30 +51,19 @@ class AtributeController {
 
   static async uploadImages(req: Request, res: Response): Promise<void> {
     try {
-      const atributeId = req.params.atributeId;
 
-      /*
-      // Verifica si el animal existe antes de subir las imágenes
-      const animalExists = await AnimalService.doesAnimalExist(animalId);
-      if (!animalExists) {
-        res.status(404).json({ error: 'El animal no existe.' });
-        return;
+      if (req.file) {
+        const imageBuffers: Buffer = req.file.buffer;
+
+        if (imageBuffers.length === 0) {
+          handleError(res, 500,'No se proporcionaron imagenes.', {});
+          return;
+        }
+
+        // Sube las imágenes a Firebase Storage
+        const imageUrls = await Service.uploadFile(req.file);
+        handleOK(res, imageUrls)
       }
-
-      // Accede a las imágenes desde los buffers de memoria
-      const imageBuffers: Buffer[] = req.files?.map((file: any) => file.buffer) || [];
-      if (imageBuffers.length === 0) {
-        res.status(400).json({ error: 'No se proporcionaron imágenes.' });
-        return;
-      }
-
-      // Sube las imágenes a Firebase Storage
-      const imageUrls = await AnimalService.uploadImages(animalId, imageBuffers);
-
-      // Actualiza la lista de URLs de las imágenes en la base de datos del animal
-      await AnimalService.updateImageURLs(animalId, imageUrls);
-
-      res.status(200).json({ imageUrls });*/
     } catch (error) {
       console.error('Error al cargar las imágenes:', error);
       res.status(500).json({ error: 'Error interno del servidor.' });
