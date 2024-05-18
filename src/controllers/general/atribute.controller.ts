@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Service from '../../services/general/atribute.service';
+import AtributeService from '../../services/general/atribute.service';
 import { handleResponse, handleOK, handleCreatedOk, handleResOK } from '../../handlers/response.handler';
 import { handleError, handleErrorGeneric } from '../../handlers/error.handler';
 import { IFileUploader } from '../../interfaces/services/IFileUploader.interface';
@@ -7,53 +7,68 @@ import { IFileUploader } from '../../interfaces/services/IFileUploader.interface
 class AtributeController {
 
   uploader:IFileUploader;
-  constructor(_uploader:IFileUploader)
+  service:AtributeService;
+
+  constructor(_uploader:IFileUploader,
+    _service: AtributeService)
   {
     this.uploader = _uploader;
+    this.service = _service;
   }
 
   async getAll(req: Request, res: Response): Promise<void> {
     try {
-      const all = await Service.getAll();
+      const all = await this.service.getAll();
       handleOK(res, all);
     } catch (error) {
       console.error('Error al obtener los atributos:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      handleErrorGeneric(res, 'Error al obtener todos', error);
+    }
+  }
+
+  async get(req: Request, res: Response): Promise<void> {
+    try {
+
+      const { id } = req.params;
+      const unique = await this.service.getById(id);
+      handleOK(res, unique);
+    } catch (error) {
+      console.error('Error al obtener atributo por id.', error);
+      handleErrorGeneric(res, "Error interno del servidor.", error);
     }
   }
 
   async create(req: Request, res: Response): Promise<void> {
     try {
       const atribute = req.body;
-      let created = await Service.create(atribute);
+      let created = await this.service.create(atribute);
       handleCreatedOk(res, created);
     } catch (error) {
       console.error('Error al crear un atributo:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      handleErrorGeneric(res, 'Error al crear', error);
     }
   }
 
   async update(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
       const updates = req.body;
-      await Service.update(id, updates);
+      const { id } = updates;
+      await this.service.update(id, updates);
       handleOK(res, updates);
     } catch (error) {
       console.error('Error al actualizar un atributo:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      handleErrorGeneric(res, 'Error al actualizar', error);
     }
   }
 
   async delete(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      await Service.delete(id);
-      res.status(200).json({ message: 'Atributo eliminado exitosamente.' });
+      await this.service.delete(id);
       handleResOK(res);
     } catch (error) {
       console.error('Error al eliminar un atributo:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      handleErrorGeneric(res, 'Error al eliminar', error);
     }
   }
 
@@ -65,11 +80,11 @@ class AtributeController {
 
         if (imageBuffers.length === 0) {
           handleError(res, 500,'No se proporcionaron imagenes.', {});
-          return;
         }
-
-        const imageUrls = await this.uploader.uploadFile(req.file, 'atributes');
-        handleOK(res, imageUrls)
+        else{
+          const imageUrls = await this.uploader.uploadFile(req.file, 'atributes');
+          handleOK(res, imageUrls)
+        }
       }
     } catch (error) {
       console.error('Error al cargar las imágenes:', error);

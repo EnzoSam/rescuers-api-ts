@@ -4,6 +4,9 @@ import authenticateToken from '../middlewares/auth.middleware';
 import multer from 'multer';
 import { FirestoreUploader } from '../services/base/firestoreUploader.service';
 import { IFileUploader } from '../interfaces/services/IFileUploader.interface';
+import AtributeService from '../services/general/atribute.service';
+import { IAtributeRepository } from '../interfaces/repositories/general/iAtributeRepository.interface';
+import { AtributeRepository } from '../repositories/general/atribute.repository';
 
 const router = express.Router();
 
@@ -12,14 +15,19 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+
+
 const uploader:IFileUploader = new FirestoreUploader();
-const controller:AtributeController = new AtributeController(uploader);
+const repository:IAtributeRepository = new AtributeRepository('atributes');
+const service:AtributeService = new AtributeService(repository);
+const controller:AtributeController = new AtributeController(uploader, service);
 
 router.use(authenticateToken);
 router.get('/', controller.getAll.bind(controller));
+router.get('/:id', controller.get.bind(controller));
 router.post('/', controller.create.bind(controller));
-router.put('/:id', controller.update.bind(controller));
 router.delete('/:id', controller.delete.bind(controller));
+router.put('/', controller.update.bind(controller));
 router.post('/uploads', upload.single('file'), controller.uploadImages.bind(controller));
 
 

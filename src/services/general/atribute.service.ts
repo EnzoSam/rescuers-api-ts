@@ -1,44 +1,37 @@
-import * as admin from 'firebase-admin';
 import IAttribute from '../../models/general/iatribute.model';
-
-
-const db = admin.database();
-const atributeRef = db.ref('atributes');
+import { IAtributeRepository } from '../../interfaces/repositories/general/iAtributeRepository.interface';
 
 class AtributeService {
 
-  static async getAll(): Promise<IAttribute[]> {
-    const snapshot = await atributeRef.once('value');
-    let atributes:IAttribute[] = [];
-    //const atributes: IAttribute[] = snapshot.val() || [];
-    
-    await snapshot.forEach(childSnapshot=> {
-      //var key = childSnapshot.key;
-      var atr = childSnapshot.val();
-      atributes.push(atr);
-  });
-
-    return atributes;
+  repository:IAtributeRepository;
+  constructor(_repository:IAtributeRepository)
+  {
+    this.repository = _repository;
   }
 
-  static async create(atribute: IAttribute): Promise<void> {
-    const atrRef = await atributeRef.push(atribute);
-    const atributeId = atrRef.key;
+  async getAll(): Promise<IAttribute[]> {
 
-    if (atributeId) {
-      await atributeRef.child(atributeId).update({ id: atributeId });
-    }
+    const allItems = await this.repository.getAll();
+    return allItems;
   }
 
-  static async update(id: string, updates: Partial<IAttribute>): Promise<void> {
-    await atributeRef.child(id).update(updates);
+  async getById(id:any): Promise<IAttribute | null> {
+
+    const allItems = await this.repository.getById(id);
+    return allItems;
   }
 
-  static async delete(id: string): Promise<void> {
-    await atributeRef.child(id).remove();
+  async create(zone: IAttribute): Promise<void> {
+    const atrRef = await this.repository.create(zone);
   }
 
+  async update(id: string, updates: Partial<IAttribute>): Promise<void> {
+    await this.repository.update(id, updates);
+  }
 
+  async delete(id: string): Promise<void> {
+    await this.repository.delete(id);
+  }
     
 }
 
