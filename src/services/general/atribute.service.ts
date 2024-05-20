@@ -15,6 +15,12 @@ class AtributeService {
     return allItems;
   }
 
+  async getByGroup(group:string): Promise<IAttribute[]> {
+
+    const allItems = await this.repository.getByGroup(group);
+    return allItems;
+  }
+
   async getById(id:any): Promise<IAttribute | null> {
 
     const allItems = await this.repository.getById(id);

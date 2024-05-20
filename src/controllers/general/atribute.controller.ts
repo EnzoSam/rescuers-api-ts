@@ -26,6 +26,17 @@ class AtributeController {
     }
   }
 
+  async getByGroup(req: Request, res: Response): Promise<void> {
+    try {
+      const {group} = req.params;
+      const all = await this.service.getByGroup(group);
+      handleOK(res, all);
+    } catch (error) {
+      console.error('Error al obtener los atributos:', error);
+      handleErrorGeneric(res, 'Error al obtener todos', error);
+    }
+  }
+
   async get(req: Request, res: Response): Promise<void> {
     try {
 

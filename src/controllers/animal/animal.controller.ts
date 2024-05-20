@@ -1,93 +1,99 @@
 import { Request, Response } from 'express';
 import AnimalService from '../../services/animal/animal.service';
+import { IFileUploader } from '../../interfaces/services/IFileUploader.interface';
+import { handleErrorGeneric, handleError } from '../../handlers/error.handler';
+import { handleOK, handleCreatedOk, handleResOK } from '../../handlers/response.handler';
 
 class AnimalController {
-  static async getAllAnimals(req: Request, res: Response): Promise<void> {
+
+  service:AnimalService;
+  uploader:IFileUploader;
+
+  constructor(_service:AnimalService,
+    _uploader:IFileUploader)
+  {
+      this.service = _service;
+      this.uploader = _uploader;
+  }
+
+  async getAll(req: Request, res: Response): Promise<void> {
     try {
-      const animals = await AnimalService.getAllAnimals();
-      res.status(200).json({ animals });
+      const all = await this.service.getAll();
+      handleOK(res, all);
     } catch (error) {
       console.error('Error al obtener los animales:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      handleErrorGeneric(res, 'Error al obtener todos', error);
     }
   }
 
-  static async createAnimal(req: Request, res: Response): Promise<void> {
+  async get(req: Request, res: Response): Promise<void> {
     try {
-      const animal = req.body;
-      await AnimalService.createAnimal(animal);
-      res.status(201).json({ message: 'Animal creado exitosamente.' });
+
+      const { id } = req.params;
+      const unique = await this.service.getById(id);
+      handleOK(res, unique);
+    } catch (error) {
+      console.error('Error al obtener animal por id.', error);
+      handleErrorGeneric(res, "Error interno del servidor.", error);
+    }
+  }
+
+  async create(req: Request, res: Response): Promise<void> {
+    try {
+      const atribute = req.body;
+      let created = await this.service.create(atribute);
+      handleCreatedOk(res, created);
     } catch (error) {
       console.error('Error al crear un animal:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      handleErrorGeneric(res, 'Error al crear', error);
     }
   }
 
-  static async updateAnimal(req: Request, res: Response): Promise<void> {
+  async update(req: Request, res: Response): Promise<void> {
     try {
-      const { animalId } = req.params;
       const updates = req.body;
-      await AnimalService.updateAnimal(animalId, updates);
-      res.status(200).json({ message: 'Animal actualizado exitosamente.' });
+      const { id } = updates;
+      await this.service.update(id, updates);
+      handleOK(res, updates);
     } catch (error) {
       console.error('Error al actualizar un animal:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      handleErrorGeneric(res, 'Error al actualizar', error);
     }
   }
 
-  static async deleteAnimal(req: Request, res: Response): Promise<void> {
+  async delete(req: Request, res: Response): Promise<void> {
     try {
-      const { animalId } = req.params;
-      await AnimalService.deleteAnimal(animalId);
-      res.status(200).json({ message: 'Animal eliminado exitosamente.' });
+      const { id } = req.params;
+      await this.service.delete(id);
+      handleResOK(res);
     } catch (error) {
       console.error('Error al eliminar un animal:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      handleErrorGeneric(res, 'Error al eliminar', error);
     }
   }
 
-  static async getAnimalsByAttributes(req: Request, res: Response): Promise<void> {
+  async uploadImages(req: Request, res: Response): Promise<void> {
     try {
-      const { attributes } = req.body;
-     // const animals = await AnimalService.getAnimalsByAttributes(attributes);
-     // res.status(200).json({ animals });
-    } catch (error) {
-      console.error('Error al obtener animales por atributos:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
-    }
-  }
 
-  static async uploadImages(req: Request, res: Response): Promise<void> {
-    try {
-      const animalId = req.params.animalId;
+      if (req.file) {
+        const imageBuffers: Buffer = req.file.buffer;
 
-      /*
-      // Verifica si el animal existe antes de subir las imágenes
-      const animalExists = await AnimalService.doesAnimalExist(animalId);
-      if (!animalExists) {
-        res.status(404).json({ error: 'El animal no existe.' });
-        return;
+        if (imageBuffers.length === 0) {
+          handleError(res, 500,'No se proporcionaron imagenes.', {});
+        }
+        else{
+          const imageUrls = await this.uploader.uploadFile
+          (req.file, 'animals');
+          handleOK(res, imageUrls)
+        }
       }
-
-      // Accede a las imágenes desde los buffers de memoria
-      const imageBuffers: Buffer[] = req.files?.map((file: any) => file.buffer) || [];
-      if (imageBuffers.length === 0) {
-        res.status(400).json({ error: 'No se proporcionaron imágenes.' });
-        return;
-      }
-
-      // Sube las imágenes a Firebase Storage
-      const imageUrls = await AnimalService.uploadImages(animalId, imageBuffers);
-
-      // Actualiza la lista de URLs de las imágenes en la base de datos del animal
-      await AnimalService.updateImageURLs(animalId, imageUrls);
-
-      res.status(200).json({ imageUrls });*/
     } catch (error) {
       console.error('Error al cargar las imágenes:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+      handleErrorGeneric(res, 'Error al subir imagen', error);
     }
   }
+
+ 
 }
 
 export default AnimalController;

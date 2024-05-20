@@ -1,15 +1,11 @@
 import { BaseModel } from "../base/base.model";
-import IAnimalAttribute from "./ianimalAtribute.interface";
 
-interface Animal extends BaseModel {
-    name: string
-    datebird:Date
-    description: string
-    availableForAdoption: boolean
-    lost: boolean
-    ownerId: string
-    attributes: IAnimalAttribute[];
+interface IAnimal extends BaseModel {
+    name:string
+    image?:string
+    description?:string
+    atributes:string[]
   }
   
-  export default Animal;
+  export default IAnimal;
   

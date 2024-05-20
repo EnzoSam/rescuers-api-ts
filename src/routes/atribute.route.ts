@@ -24,6 +24,7 @@ const controller:AtributeController = new AtributeController(uploader, service);
 
 router.use(authenticateToken);
 router.get('/', controller.getAll.bind(controller));
+router.get('/group/:group', controller.getByGroup.bind(controller));
 router.get('/:id', controller.get.bind(controller));
 router.post('/', controller.create.bind(controller));
 router.delete('/:id', controller.delete.bind(controller));
