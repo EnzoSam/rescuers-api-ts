@@ -19,7 +19,7 @@ app.use('/api/permissions', permissionRoutes);
 app.use('/api/advertisement', advertisementRoutes);
 app.use('/api/animals', animalRoutes);
 app.use('/api/caregiver', caregiverRoutes);
-app.use('/api/post', postRoutes);
+app.use('/api/posts', postRoutes);
 app.use('/api/atributes', atributesRoutes);
 app.use('/api/zones', zoneRoutes);
 

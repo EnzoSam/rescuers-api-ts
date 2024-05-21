@@ -38,10 +38,12 @@ class AnimalController {
     }
   }
 
-  async create(req: Request, res: Response): Promise<void> {
+  async create(req: any, res: Response): Promise<void> {
     try {
-      const atribute = req.body;
-      let created = await this.service.create(atribute);
+      const animal = req.body;
+      let {userId} = req.user;
+      animal.userId = userId;
+      let created = await this.service.create(animal);
       handleCreatedOk(res, created);
     } catch (error) {
       console.error('Error al crear un animal:', error);

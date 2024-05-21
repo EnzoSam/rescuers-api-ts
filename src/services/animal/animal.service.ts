@@ -23,8 +23,9 @@ class AnimalService {
     return allItems;
   }
 
-  async create(animal: IAnimal): Promise<void> {
+  async create(animal: IAnimal): Promise<string> {
     const atrRef = await this.repository.create(animal);
+    return atrRef;
   }
 
   async update(id: string, updates: Partial<IAnimal>): Promise<void> {

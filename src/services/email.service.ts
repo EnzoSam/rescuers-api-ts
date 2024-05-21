@@ -20,7 +20,7 @@ class EmailService {
       from: process.env.SMTP_MAIL,
       to,
       subject: 'Confirmación de registro',
-      text: `Por favor, haga clic en el siguiente enlace para confirmar su registro: ${process.env.FRONT_URL}verify-email/${to}/${token}`,
+      text: `Por favor, haga clic en el siguiente enlace para confirmar su registro: ${process.env.FRONT_URL}auth/validate/${to}/${token}`,
     };
 
     await this.transporter.sendMail(mailOptions);

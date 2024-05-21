@@ -6,18 +6,77 @@ const secretKey = 'your-secret-key';
 import jwt from 'jsonwebtoken';
 import { handleError, handleErrorGeneric } from '../../handlers/error.handler';
 import { IResult } from '../../interfaces/iresult.interface';
+import { handleCreatedOk, handleOK, handleResOK } from '../../handlers/response.handler';
 
 class UserController {
 
-  static test(req: Request, res: Response)
+  service:UserService;
+
+  constructor(_userService:UserService)
   {
-    res.send('Controller OK!');
+    this.service = _userService;
   }
 
-  static async registerUser(req: Request, res: Response): Promise<void> {
+  async getAll(req: Request, res: Response): Promise<void> {
+    try {
+      const all = await this.service.getAll();
+      handleOK(res, all);
+    } catch (error) {
+      console.error('Error al obtener zonas:', error);
+      handleErrorGeneric(res, "Error interno del servidor.", error);
+    }
+  }
+
+  async get(req: Request, res: Response): Promise<void> {
+    try {
+
+      const { id } = req.params;
+      const unique = await this.service.getById(id);
+      handleOK(res, unique);
+    } catch (error) {
+      console.error('Error al obtener zona por id.', error);
+      handleErrorGeneric(res, "Error interno del servidor.", error);
+    }
+  }
+
+  async create(req: Request, res: Response): Promise<void> {
+    try {
+      const atribute = req.body;
+      let created = await this.service.create(atribute);
+      handleCreatedOk(res, created);
+    } catch (error) {
+      console.error('Error al crear un atributo:', error);
+      handleErrorGeneric(res, "Error interno del servidor.", error);
+    }
+  }
+
+  async update(req: Request, res: Response): Promise<void> {
+    try {      
+      const updates = req.body;
+      const { id } = updates;
+      await this.service.update(id, updates);
+      handleOK(res, updates);
+    } catch (error) {
+      console.error('Error al actualizar un atributo:', error);
+      handleErrorGeneric(res, "Error interno del servidor.", error);
+    }
+  }
+
+  async delete(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+      await this.service.delete(id);
+      handleResOK(res);
+    } catch (error) {
+      handleErrorGeneric(res, "Error interno del servidor.", error);
+    }
+  }
+
+
+  async registerUser(req: Request, res: Response): Promise<void> {
     try {
       const { email, name, lastName, password } = req.body;
-      let registerResponse = await UserService.registerUser
+      let registerResponse = await this.service.registerUser
       (email, name, lastName, password);
 
       res.status(registerResponse.statusCode).send(registerResponse);
@@ -26,52 +85,12 @@ class UserController {
     }
   }
 
-  static async getUserById(req: Request, res: Response): Promise<void> {
-    try {
-      const userId: number = parseInt(req.params.userId, 10);
-      const user = await UserService.getUserById(userId);
-      if (user) {
-        res.status(200).json(user);
-      } else {
-        res.status(404).json({ error: 'Usuario no encontrado.' });
-      }
-    } catch (error) {
-      console.error('Error al obtener un usuario por ID:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
-    }
-  }
-
-  static async updateUser(req: Request, res: Response): Promise<void> {
-    try {
-      const userId: number = parseInt(req.params.userId, 10);
-
-       const updatedUser: Partial<User> = req.body;
-        await UserService.updateUser(userId, updatedUser);
-        res.status(200).json({ message: 'Usuario actualizado exitosamente.' });
-
-    } catch (error) {
-      console.error('Error al actualizar un usuario:', error);
-      handleErrorGeneric(res, 'Error interno del servidor', error);
-    }
-  }
-
-  static async deleteUser(req: Request, res: Response): Promise<void> {
-    try {
-      const userId: number = parseInt(req.params.userId, 10);
-      await UserService.deleteUser(userId);
-      res.status(200).json({ message: 'Usuario eliminado exitosamente.' });
-    } catch (error) {
-      console.error('Error al eliminar un usuario:', error);
-      handleErrorGeneric(res, 'Error interno del servidor', error);
-    }
-  }
-
-  static async confirmEmail(req: Request, res: Response): Promise<void> {
+  async confirmEmail(req: Request, res: Response): Promise<void> {
     try {
     
       const { email, token } = req.body;
     
-      const confirmed = await UserService.confirmEmail(email, token);
+      const confirmed = await this.service.confirmEmail(email, token);
       let result:IResult = {message:'', state:'', code: 500};
       if (confirmed) {
         result.message = 'Correo electrónico confirmado exitosamente.';
@@ -90,15 +109,15 @@ class UserController {
     }
   }
 
-  static async loginUser(req: Request, res: Response): Promise<void> {
+  async loginUser(req: Request, res: Response): Promise<void> {
     try {
       const { email, password } = req.body;
-      const token = await UserService.loginUser(email, password);
+      const token = await this.service.loginUser(email, password);
 
       if (token) {
         res.status(200).json({ token });
       } else {
-        res.status(401).send({message: 'Credenciales incorrectas.'});
+        res.status(401).json({message: 'Credenciales incorrectas.'});
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
@@ -106,11 +125,11 @@ class UserController {
     }
   }
 
-  static async requestResetPassword(req: Request, res: Response): Promise<void> {
+  async requestResetPassword(req: Request, res: Response): Promise<void> {
     try {
       const { email } = req.body;
 
-      let r = await UserService.requesResetPassword(email);
+      let r = await this.service.requesResetPassword(email);
       res.status(r.code).json(r);
     } catch (error) {
       console.error('Error en la pericion de reseto de password:', error);
@@ -118,11 +137,11 @@ class UserController {
     }
   }
 
-  static async changePassword(req: Request, res: Response): Promise<void> {
+  async changePassword(req: Request, res: Response): Promise<void> {
     try {
       const { email, token, newPassword } = req.body;
 
-      let r = await UserService.changePassword(email, token, newPassword);
+      let r = await this.service.changePassword(email, token, newPassword);
       res.status(r.code).json(r);
     } catch (error) {
       console.error('Error en la pericion de cambio de password:', error);

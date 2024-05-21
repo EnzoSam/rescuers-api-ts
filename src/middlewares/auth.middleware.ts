@@ -8,8 +8,8 @@ const secretKey = process.env.JWT_SECRET || '1a1aa4a5a5::;;;';
 
 function authenticateToken(req: any, res: Response, next: NextFunction): void {
   
-  next();
-  /*
+  //next();
+  
   const token = req.header('Authorization')?.split(' ')[1];
 
   if (!token) {
@@ -24,7 +24,7 @@ function authenticateToken(req: any, res: Response, next: NextFunction): void {
 
     req.user = user as User;
     next();
-  });*/
+  });
 }
 
 export default authenticateToken;
