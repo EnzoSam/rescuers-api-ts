@@ -36,6 +36,11 @@ class AnimalService {
     await this.repository.delete(id);
   }
 
+  async filter():Promise<IAnimal[]>
+  {
+    const allItems = await this.repository.getAll();
+    return allItems;
+  }  
 }
 
 export default AnimalService;

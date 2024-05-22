@@ -2,18 +2,15 @@ import * as admin from 'firebase-admin';
 import IPost from '../../models/animals/ipost.interface';
 import AnimalService from './animal.service';
 
-const db = admin.database();
-const postsRef = db.ref('posts');
-
 class PostService {
 
-    constructor(private _postService:PostService)
+    constructor(private _animalService:AnimalService)
     {
     }
 
     async filter():Promise<IPost[]>
     {
-       let animals = await this._postService.filter();
+       let animals = await this._animalService.filter();
        return animals;
     }
 }
