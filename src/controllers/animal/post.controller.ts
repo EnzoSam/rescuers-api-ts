@@ -5,6 +5,7 @@ import PostService from '../../services/animal/post.service';
 import IPost from '../../models/animals/ipost.interface';
 import { handleOK } from '../../handlers/response.handler';
 import { handleErrorGeneric } from '../../handlers/error.handler';
+import { IFilter } from '../../interfaces/ifilter.interface';
 
 class PostController {
 
@@ -15,7 +16,11 @@ class PostController {
   async filter(req: Request, res: Response): Promise<void> 
   {
     try {
-      const all = await this._service.filter();
+      let filter:IFilter | undefined = undefined;
+      if(req.body)
+        filter = req.body as IFilter;
+      
+      const all = await this._service.filter(filter);
       handleOK(res, all);
     } catch (error) {
       console.error('Error al obtener los post:', error);

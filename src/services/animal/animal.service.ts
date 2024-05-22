@@ -1,5 +1,6 @@
 import IAnimal from '../../models/animals/ianimal.interface';
 import { IAnimalRepository } from '../../interfaces/repositories/rescuers/iAnimalRepository.interface';
+import { IFilter } from '../../interfaces/ifilter.interface';
 
 class AnimalService {
 
@@ -36,9 +37,9 @@ class AnimalService {
     await this.repository.delete(id);
   }
 
-  async filter():Promise<IAnimal[]>
+  async filter(filter:IFilter | undefined):Promise<IAnimal[]>
   {
-    const allItems = await this.repository.getAll();
+    const allItems = await this.repository.filter(filter);
     return allItems;
   }  
 }

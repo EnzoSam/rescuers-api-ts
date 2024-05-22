@@ -14,6 +14,6 @@ const service:PostService = new PostService(animalService);
 const controller = new PostController(service);
 
 router.use(authenticateToken);
-router.get('/', controller.filter.bind(controller));
+router.post('/', controller.filter.bind(controller));
 
 export default router;
