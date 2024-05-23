@@ -7,6 +7,7 @@ import caregiverRoutes from './routes/caregiver.route';
 import postRoutes from './routes/post.route';
 import atributesRoutes from './routes/atribute.route';
 import zoneRoutes from './routes/zone.route';
+import usefullRoutes from './routes/usefulData.route';
 import cors from "cors";
 
 const app = express();
@@ -22,6 +23,6 @@ app.use('/api/caregiver', caregiverRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/atributes', atributesRoutes);
 app.use('/api/zones', zoneRoutes);
-
+app.use('/api/usefuldata', usefullRoutes);
 
 export {app};
