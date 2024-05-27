@@ -1,6 +1,7 @@
 import IAnimal from '../../models/animals/ianimal.interface';
 import { IAnimalRepository } from '../../interfaces/repositories/rescuers/iAnimalRepository.interface';
 import { IFilter } from '../../interfaces/ifilter.interface';
+import { PostStates } from '../../constants/animals/posts.constant';
 
 class AnimalService {
 
@@ -25,6 +26,8 @@ class AnimalService {
   }
 
   async create(animal: IAnimal): Promise<string> {
+    
+    animal.state = PostStates.Verifying;
     const atrRef = await this.repository.create(animal);
     return atrRef;
   }

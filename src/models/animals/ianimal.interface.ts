@@ -5,6 +5,7 @@ interface IAnimal extends BaseModel {
     userId:string
     image?:string
     description?:string
+    state:number
     atributes:string[]
   }
   
