@@ -158,6 +158,10 @@ class UserService {
            process.env.JWT_SECRET || '1a1aa4a5a5::;;;', { expiresIn: '120d' });
       }
     }
+    else
+    {
+      throw new Error('El usuario no existe');
+    }
 
     return null;
   }

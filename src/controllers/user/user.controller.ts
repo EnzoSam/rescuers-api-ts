@@ -4,7 +4,7 @@ import User from '../../models/user/iuser.interface';
 
 const secretKey = 'your-secret-key';
 import jwt from 'jsonwebtoken';
-import { handleError, handleErrorGeneric } from '../../handlers/error.handler';
+import { handleError, handleErrorGeneric, handleExeption } from '../../handlers/error.handler';
 import { IResult } from '../../interfaces/iresult.interface';
 import { handleCreatedOk, handleOK, handleResOK } from '../../handlers/response.handler';
 
@@ -119,9 +119,9 @@ class UserController {
       } else {
         res.status(401).json({message: 'Credenciales incorrectas.'});
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error al iniciar sesión:', error);
-      handleErrorGeneric(res, 'Error interno del servidor', error);
+      handleExeption(res,500, error);
     }
   }
 
@@ -152,3 +152,4 @@ class UserController {
 
 
 export default UserController;
+

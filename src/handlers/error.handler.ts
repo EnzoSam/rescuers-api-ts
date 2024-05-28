@@ -10,4 +10,9 @@ const handleError = (res: Response, code:number, message: string, errorRaw?: any
   res.status(code).json({ message, data:errorRaw, statusCode: code });
 };
 
-export { handleError,handleErrorGeneric };
+const handleExeption = (res: Response, code:number, error:Error) => {
+  console.log(error);
+  res.status(code).json({ message:error.message, data:error, statusCode: code });
+};
+
+export { handleError,handleErrorGeneric, handleExeption};

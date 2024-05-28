@@ -1,9 +1,9 @@
 import { IUsefulDataRepository } from "../../interfaces/repositories/general/iusefulData.interface";
 import { IUsefulData } from "../../models/general/iusefulData.model";
-import { BaseFirebaseRepository } from "../baseFirebase.repository";
+import { BaseFirestoreRepository } from "../baseFirestore.repository";
 
 export class UsefullRepository 
-extends BaseFirebaseRepository<IUsefulData> implements IUsefulDataRepository {
+extends BaseFirestoreRepository<IUsefulData> implements IUsefulDataRepository {
 
    
 }

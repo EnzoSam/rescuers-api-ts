@@ -1,22 +1,32 @@
 import { IUserRepository } from "../../interfaces/repositories/users/iUserRepository.interface";
 import User from "../../models/user/iuser.interface";
-import { BaseFirebaseRepository } from "../baseFirebase.repository";
+import { BaseFirestoreRepository } from "../baseFirestore.repository";
 
-export class UserRepository 
-extends BaseFirebaseRepository<User> implements IUserRepository {
+export class UserRepository
+    extends BaseFirestoreRepository<User> implements IUserRepository {
 
     async getEmailVerificationAttempts(): Promise<number> {
-        
-        const blockedUsers = await this.ref.orderByChild
-        ('emailVerificationAttempts').equalTo(5).once('value');
-        const data = blockedUsers.val();
-        return data ? data.emailVerificationAttempts : 0;
+        const snapshot = await this.collection.where('emailVerificationAttempts', '==', 5).get();
+        let count = 0;
+        snapshot.forEach(doc => {
+            if (doc.exists && doc.data().emailVerificationAttempts === 5) {
+                count++;
+            }
+        });
+        return count;
     }
-    
+
     async getUserByEmail(email: string): Promise<User | undefined> {
-        const snapshot = await this.ref.orderByChild('email').equalTo(email).once('value');
-        const user = snapshot.val();
-        return user ? Object.values(user)[0] as User : undefined;
-      }    
-   
+        const snapshot = await this.collection.where('email', '==', email).get();
+        let user: User | undefined = undefined;
+        snapshot.forEach(doc => {
+            if (doc.exists) {
+                user = doc.data() as User;
+                user.id = doc.id;
+                return;
+            }
+        });
+        return user;
+    }
+
 }
