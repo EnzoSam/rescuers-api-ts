@@ -17,12 +17,10 @@ router.post('/no-auth/login', controller.loginUser.bind(controller));
 router.post('/no-auth/request-reset-password', controller.requestResetPassword.bind(controller));
 router.post('/no-auth/change-password', controller.changePassword.bind(controller));
 
-router.use(authenticateToken);
 router.get('/', controller.getAll.bind(controller));
 router.get('/:id', controller.get.bind(controller));
-router.post('/', controller.create.bind(controller));
-router.put('/', controller.update.bind(controller));
-router.delete('/:id', controller.delete.bind(controller));
+router.put('/',authenticateToken, controller.update.bind(controller));
+router.delete('/:id',authenticateToken, controller.delete.bind(controller));
 
 //router.use(authenticateToken);
 

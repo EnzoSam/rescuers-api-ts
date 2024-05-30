@@ -22,14 +22,14 @@ const repository:IAtributeRepository = new AtributeRepository('atributes');
 const service:AtributeService = new AtributeService(repository);
 const controller:AtributeController = new AtributeController(uploader, service);
 
-router.use(authenticateToken);
 router.get('/', controller.getAll.bind(controller));
 router.get('/group/:group', controller.getByGroup.bind(controller));
 router.get('/:id', controller.get.bind(controller));
-router.post('/', controller.create.bind(controller));
-router.delete('/:id', controller.delete.bind(controller));
-router.put('/', controller.update.bind(controller));
-router.post('/uploads', upload.single('file'), controller.uploadImages.bind(controller));
+
+router.post('/',authenticateToken, controller.create.bind(controller));
+router.delete('/:id',authenticateToken, controller.delete.bind(controller));
+router.put('/',authenticateToken, controller.update.bind(controller));
+router.post('/uploads',authenticateToken, upload.single('file'), controller.uploadImages.bind(controller));
 
 
 export default router;

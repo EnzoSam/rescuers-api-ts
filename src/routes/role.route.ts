@@ -6,8 +6,6 @@ import authenticateToken from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
-router.use(authenticateToken);
-
 //router.get('/', RoleController.getAllRoles);
 //router.post('/', RoleController.createRole);
 //router.delete('/:roleId', RoleController.deleteRole);

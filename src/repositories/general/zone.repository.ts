@@ -19,7 +19,8 @@ export class ZoneRepository
     }
 
     async getRoots(): Promise<IZone[]> {
-        const snapshot = await this.collection.where('parentZoneId', '==', null).get();
+        const snapshot = await this.collection.where
+        ('parentZoneId', '==', null).get();
         const data: IZone[] = [];
         snapshot.forEach(doc => {
             if (doc.exists) {
