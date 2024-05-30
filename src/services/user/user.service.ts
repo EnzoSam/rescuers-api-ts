@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import { IInitRegisterResponse } from '../../interfaces/initregisterresponse.interface';
 import { IResult } from '../../interfaces/iresult.interface';
 import { IUserRepository } from '../../interfaces/repositories/users/iUserRepository.interface';
+import { ROLES } from '../../constants/auth/roles.constant';
 
 class UserService {
 
@@ -42,6 +43,13 @@ class UserService {
     await this.repository.delete(id);
   }
 
+  async generateToken(email:string)
+  {
+    let t = await  bcrypt.hash
+    (JSON.stringify({email, t: new Date().getTime().toString()}), 10);
+    return t;
+  }
+
   async registerUser(email: string, name: string, lastName: string, password: string): Promise<IInitRegisterResponse> {
 
     return new Promise(async (resolve, reject) => {
@@ -67,17 +75,20 @@ class UserService {
           return;
         }
 
-        let emailConfirmationToken = 'hola12121333';
+        let emailConfirmationToken = await this.generateToken(email);        
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = {
+        const user:User = {
           email: email,
           name: name,
           lastName: lastName,
           password: hashedPassword,
           emailVerificationAttempts: 0,
-          emailConfirmationToken: emailConfirmationToken
+          emailConfirmationToken: emailConfirmationToken,
+          roles:[ROLES.USER],
+          contacts:[],
+          emailConfirmed: false
         };
 
         await this.repository.create(user as User);
@@ -130,7 +141,7 @@ class UserService {
       throw new Error('El correo electrónico está bloqueado debido a demasiados intentos.');
     }
 
-    const newToken = 'hola454555545sd4verifytoken';
+    const newToken = await this.generateToken(email);
     user.emailVerificationAttempts += 1;
     user.emailConfirmationToken = newToken;
     await this.update(user.id, user);
@@ -154,7 +165,7 @@ class UserService {
 
     if (user) {
       if (user && (await bcrypt.compare(password, user.password))) {
-        return jwt.sign({ userId: user.id, email: user.email }, 
+        return jwt.sign({ userId: user.id, email: user.email, roles:user.roles }, 
            process.env.JWT_SECRET || '1a1aa4a5a5::;;;', { expiresIn: '120d' });
       }
     }
@@ -175,7 +186,7 @@ class UserService {
     }
     if (user) {
 
-      const token = jwt.sign({ email }, process.env.JWT_SECRET || '1a1aa4a5a5::;;;', { expiresIn: '1h' });
+      const token = await this.generateToken(email);
       user.emailConfirmationToken = token;
       await this.update(user.id, user);
       await emailService.sendConfirmationEmail(email, token);
@@ -222,6 +233,20 @@ class UserService {
     return result;
   }
 
+  async setRoles(userId:any, roles:number[]):Promise<void>
+  {
+    if(!userId)
+      throw new Error('Operacion imposible sin Id');
+
+    let u = await this.getById(userId);
+    if(u)
+    {
+      u.roles = roles;
+      await this.update(u.id, u);
+    }
+    else
+      throw new Error('El usuario no existe.')
+  }
 }
 
 export default UserService;

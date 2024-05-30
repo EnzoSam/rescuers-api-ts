@@ -4,6 +4,8 @@ import { IUsefulDataRepository } from '../interfaces/repositories/general/iusefu
 import { UsefullRepository } from '../repositories/general/usefulData.repository';
 import UsefulDataService from '../services/general/usefullData.service';
 import UsefulDataController from '../controllers/general/usefulData.controller';
+import validateRole from '../middlewares/role.middleware';
+import { ROLES } from '../constants/auth/roles.constant';
 
 const router = express.Router();
 
@@ -11,13 +13,12 @@ const repository:IUsefulDataRepository = new UsefullRepository('usefulData');
 const service:UsefulDataService = new UsefulDataService(repository);
 const controller:UsefulDataController = new UsefulDataController(service);
 
-router.use(authenticateToken);
 router.get('/', controller.getAll.bind(controller));
 router.get('/:id', controller.get.bind(controller));
 
 router.post('/',authenticateToken, controller.create.bind(controller));
 router.delete('/:id', authenticateToken, controller.delete.bind(controller));
-router.put('/', authenticateToken, controller.update.bind(controller));
+router.put('/', authenticateToken,validateRole([ROLES.SUPER_ADMIN]), controller.update.bind(controller));
 
 
 export default router;

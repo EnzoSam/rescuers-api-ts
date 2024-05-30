@@ -148,6 +148,28 @@ class UserController {
       handleErrorGeneric(res, 'Error interno del servidor', error);
     }
   }
+
+  async getRoles(req: any, res: Response): Promise<void> {
+    try {
+      const  user = req.user;
+      handleOK(res, user.roles);
+    } catch (error) {
+      console.error('Error en la pericion roles:', error);
+      handleErrorGeneric(res, 'Error interno del servidor', error);
+    }
+  }  
+
+  async setRoles(req: Request, res: Response): Promise<void> {
+    try {
+
+      const {userId, roles} = req.body;
+      await this.service.setRoles(userId, roles);
+      handleResOK(res);
+    } catch (error) {
+      console.error('Error en la pericion de cambio de roles:', error);
+      handleErrorGeneric(res, 'Error interno del servidor', error);
+    }
+  } 
 }  
 
 
