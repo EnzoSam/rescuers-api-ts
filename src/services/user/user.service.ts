@@ -8,7 +8,7 @@ import { IInitRegisterResponse } from '../../interfaces/initregisterresponse.int
 import { IResult } from '../../interfaces/iresult.interface';
 import { IUserRepository } from '../../interfaces/repositories/users/iUserRepository.interface';
 import { ROLES } from '../../constants/auth/roles.constant';
-
+  
 class UserService {
 
   repository:IUserRepository;
@@ -45,9 +45,12 @@ class UserService {
 
   async generateToken(email:string)
   {
-    let t = await  bcrypt.hash
-    (JSON.stringify({email, t: new Date().getTime().toString()}), 10);
-    return t;
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let token = '';
+    for (let i = 0; i < 16; i++) {
+    token += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return token;
   }
 
   async registerUser(email: string, name: string, lastName: string, password: string): Promise<IInitRegisterResponse> {
@@ -209,8 +212,7 @@ class UserService {
       state: ''
     }
     if (user) {
-      const decodedToken = jwt.verify(token,  process.env.JWT_SECRET || '1a1aa4a5a5::;;;') as { email: string };
-      if(decodedToken.email === email)
+      if(user.emailConfirmationToken === token)
       {
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.emailConfirmationToken = hashedPassword;
