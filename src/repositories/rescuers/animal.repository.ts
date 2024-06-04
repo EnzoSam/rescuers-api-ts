@@ -22,6 +22,5 @@ extends BaseFirestoreRepository<IAnimal> implements IAnimalRepository {
         });
         return data;
     }
- 
-   
+
 }

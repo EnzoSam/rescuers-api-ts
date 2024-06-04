@@ -3,6 +3,7 @@ import AnimalService from '../../services/animal/animal.service';
 import { IFileUploader } from '../../interfaces/services/IFileUploader.interface';
 import { handleErrorGeneric, handleError } from '../../handlers/error.handler';
 import { handleOK, handleCreatedOk, handleResOK } from '../../handlers/response.handler';
+import { PostStates } from '../../constants/animals/posts.constant';
 
 class AnimalController {
 
@@ -95,7 +96,49 @@ class AnimalController {
     }
   }
 
+  async changeStatePublished(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.body;
+      await this.service.changeState(id, PostStates.Published);
+      handleResOK(res);
+    } catch (error) {
+      console.error('Error al actualizar un animal:', error);
+      handleErrorGeneric(res, 'Error al actualizar', error);
+    }
+  }
+
+  async changeStateRejected(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.body;
+      await this.service.changeState(id, PostStates.Rejected);
+      handleResOK(res);
+    } catch (error) {
+      console.error('Error al actualizar un animal:', error);
+      handleErrorGeneric(res, 'Error al actualizar', error);
+    }
+  }  
  
+  async changeStateArchived(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.body;
+      await this.service.changeState(id, PostStates.Archived);
+      handleResOK(res);
+    } catch (error) {
+      console.error('Error al actualizar un animal:', error);
+      handleErrorGeneric(res, 'Error al actualizar', error);
+    }
+  }   
+
+  async changeStateDraft(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.body;
+      await this.service.changeState(id, PostStates.Draft);
+      handleResOK(res);
+    } catch (error) {
+      console.error('Error al actualizar un animal:', error);
+      handleErrorGeneric(res, 'Error al actualizar', error);
+    }
+  }    
 }
 
 export default AnimalController;

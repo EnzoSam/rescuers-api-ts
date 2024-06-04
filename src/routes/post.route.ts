@@ -17,8 +17,13 @@ const animalService:AnimalService = new AnimalService(repository);
 const atributeRepository:IAtributeRepository = new AtributeRepository(CollectionsNames.atributes);
 const atributeService:AtributeService = new AtributeService(atributeRepository)
 const service:PostService = new PostService(animalService, atributeService);
-const controller = new PostController(service);
+const controller = new PostController(service,animalService);
 
 router.post('/', controller.filter.bind(controller));
+
+router.put('/topublished',authenticateToken, controller.changeStatePublished.bind(controller));
+router.put('/toreject',authenticateToken, controller.changeStateRejected.bind(controller));
+router.put('/toarchive',authenticateToken, controller.changeStateArchived.bind(controller));
+router.put('/todraft',authenticateToken, controller.changeStateDraft.bind(controller));
 
 export default router;

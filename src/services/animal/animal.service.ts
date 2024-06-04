@@ -27,7 +27,7 @@ class AnimalService {
 
   async create(animal: IAnimal): Promise<string> {
     
-    animal.state = PostStates.Verifying;
+    animal.state = PostStates.PendingReview;
     const atrRef = await this.repository.create(animal);
     return atrRef;
   }
@@ -45,6 +45,19 @@ class AnimalService {
     const allItems = await this.repository.filter(filter);
     return allItems;
   }  
+
+  async changeState(id: string, _state:PostStates): Promise<void> {
+    let a =  await this.getById(id);
+    if(a)
+    {
+      a.state = _state;
+      await this.update(id, a);
+    }
+    else
+    {
+        throw new Error('El animal no existe.');
+    }
+  }
 }
 
 export default AnimalService;

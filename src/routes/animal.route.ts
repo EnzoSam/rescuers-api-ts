@@ -28,5 +28,4 @@ router.delete('/:id',authenticateToken, controller.delete.bind(controller));
 router.put('/',authenticateToken, controller.update.bind(controller));
 router.post('/uploads',authenticateToken, upload.single('file'), controller.uploadImages.bind(controller));
 
-
 export default router;
