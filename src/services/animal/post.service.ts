@@ -1,3 +1,4 @@
+import { ContentsType, PostStates } from '../../constants/animals/posts.constant';
 import { AtributesGroup } from '../../constants/general/atributes.constant';
 import { IFilter } from '../../interfaces/ifilter.interface';
 import IAnimal from '../../models/animals/ianimal.interface';
@@ -37,12 +38,20 @@ class PostService {
                 id: animal.id,
                 description : animal.description,
                 image: animal.image,
-                title: animal.name? animal.name : typeName
+                title: animal.name? animal.name : typeName,
+                contentType: ContentsType.Animal,
+                state: animal.state
             }
 
             posts.push(animalPost);
         }
        return posts;
+    }
+
+    async changeState(id:any, contentType: ContentsType, newState:PostStates)
+    {
+        if(contentType === ContentsType.Animal)
+            await this._animalService.changeState(id, newState);
     }
 }
 

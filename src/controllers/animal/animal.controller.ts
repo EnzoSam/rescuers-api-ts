@@ -95,50 +95,6 @@ class AnimalController {
       handleErrorGeneric(res, 'Error al subir imagen', error);
     }
   }
-
-  async changeStatePublished(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.body;
-      await this.service.changeState(id, PostStates.Published);
-      handleResOK(res);
-    } catch (error) {
-      console.error('Error al actualizar un animal:', error);
-      handleErrorGeneric(res, 'Error al actualizar', error);
-    }
-  }
-
-  async changeStateRejected(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.body;
-      await this.service.changeState(id, PostStates.Rejected);
-      handleResOK(res);
-    } catch (error) {
-      console.error('Error al actualizar un animal:', error);
-      handleErrorGeneric(res, 'Error al actualizar', error);
-    }
-  }  
- 
-  async changeStateArchived(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.body;
-      await this.service.changeState(id, PostStates.Archived);
-      handleResOK(res);
-    } catch (error) {
-      console.error('Error al actualizar un animal:', error);
-      handleErrorGeneric(res, 'Error al actualizar', error);
-    }
-  }   
-
-  async changeStateDraft(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.body;
-      await this.service.changeState(id, PostStates.Draft);
-      handleResOK(res);
-    } catch (error) {
-      console.error('Error al actualizar un animal:', error);
-      handleErrorGeneric(res, 'Error al actualizar', error);
-    }
-  }    
 }
 
 export default AnimalController;

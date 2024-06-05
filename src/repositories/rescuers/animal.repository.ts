@@ -1,3 +1,4 @@
+import { PostStates } from "../../constants/animals/posts.constant";
 import { IFilter } from "../../interfaces/ifilter.interface";
 import { IAnimalRepository } from "../../interfaces/repositories/rescuers/iAnimalRepository.interface";
 import IAnimal from "../../models/animals/ianimal.interface";
@@ -7,9 +8,9 @@ export class AnimalRepository
 extends BaseFirestoreRepository<IAnimal> implements IAnimalRepository {
 
     async filter(filter: IFilter | undefined): Promise<IAnimal[]> {
-        let q = this.collection.where('state','!=', 0);
+        let q = this.collection.where('state','==', filter?.state || PostStates.Published);
         if(filter && filter?.atributes && filter.atributes.length > 0)
-            q = q.where('atributes', 'array-contains-any', filter?.atributes);
+            q = q.where('atributes', 'array-contains-any', filter?.atributes);        
         const snapshot = await q.get();
         const data: IAnimal[] = [];
         snapshot.forEach(doc => {

@@ -6,3 +6,9 @@ export enum PostStates
     Archived = 4, // La publicación ha sido archivada y ya no es visible para el público.
     Rejected = 5 // La publicación ha sido revisada y rechazada por un editor.
 }
+
+export enum ContentsType
+{
+    Animal = 1,
+    Adversiment = 2
+}

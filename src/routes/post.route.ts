@@ -9,6 +9,8 @@ import AtributeService from '../services/general/atribute.service';
 import { IAtributeRepository } from '../interfaces/repositories/general/iAtributeRepository.interface';
 import { AtributeRepository } from '../repositories/general/atribute.repository';
 import { CollectionsNames } from '../constants/database/database.constants';
+import validateRole from '../middlewares/role.middleware';
+import { ROLES } from '../constants/auth/roles.constant';
 
 const router = express.Router();
 
@@ -17,13 +19,36 @@ const animalService:AnimalService = new AnimalService(repository);
 const atributeRepository:IAtributeRepository = new AtributeRepository(CollectionsNames.atributes);
 const atributeService:AtributeService = new AtributeService(atributeRepository)
 const service:PostService = new PostService(animalService, atributeService);
-const controller = new PostController(service,animalService);
+const controller = new PostController(service);
 
 router.post('/', controller.filter.bind(controller));
 
-router.put('/topublished',authenticateToken, controller.changeStatePublished.bind(controller));
-router.put('/toreject',authenticateToken, controller.changeStateRejected.bind(controller));
-router.put('/toarchive',authenticateToken, controller.changeStateArchived.bind(controller));
-router.put('/todraft',authenticateToken, controller.changeStateDraft.bind(controller));
+router.put('/torevision',
+    authenticateToken,
+    validateRole([ROLES.ADMIN]), 
+    controller.changeStateRevision.bind(controller));
+
+router.put('/topublished',
+    authenticateToken,
+    validateRole([ROLES.ADMIN]), 
+    controller.changeStatePublished.bind(controller));
+
+router.put('/toreject',
+    authenticateToken,
+    validateRole([ROLES.ADMIN]),
+    authenticateToken, 
+    controller.changeStateRejected.bind(controller));
+    
+router.put('/toarchive',
+    authenticateToken,
+    validateRole([ROLES.ADMIN]),
+    authenticateToken,
+    controller.changeStateArchived.bind(controller));
+
+router.put('/todraft',
+    authenticateToken,
+    validateRole([ROLES.ADMIN]),
+    authenticateToken,
+    controller.changeStateDraft.bind(controller));
 
 export default router;

@@ -11,57 +11,61 @@ import { PostStates } from '../../constants/animals/posts.constant';
 
 class PostController {
 
-  constructor(private _service:PostService,
-    private _animalService:AnimalService
-  )
+  constructor(private _service:PostService)
   {
+  }
+
+  async changeStateRevision(req: Request, res: Response): Promise<void> {
+    try {
+      const { id, contentType } = req.body;
+      await this._service.changeState(id, contentType, PostStates.PendingReview);
+      handleResOK(res);
+    } catch (error) {
+      console.error('Error al actualizar un post:', error);
+      handleErrorGeneric(res, 'Error al actualizar', error);
+    }
   }
 
   async changeStatePublished(req: Request, res: Response): Promise<void> {
     try {
-      const { animalId } = req.body;
-
-      if(animalId)
-          await this._animalService.changeState(animalId, PostStates.Published);
+      const { id, contentType } = req.body;
+      await this._service.changeState(id, contentType, PostStates.Published);
       handleResOK(res);
     } catch (error) {
-      console.error('Error al actualizar un animal:', error);
+      console.error('Error al actualizar un post:', error);
       handleErrorGeneric(res, 'Error al actualizar', error);
     }
   }
 
   async changeStateRejected(req: Request, res: Response): Promise<void> {
     try {
-      const { animalId } = req.body;
-      if(animalId)
-        await this._animalService.changeState(animalId, PostStates.Rejected);
+      const { id, contentType } = req.body;
+      await this._service.changeState(id, contentType, PostStates.Rejected);
       handleResOK(res);
     } catch (error) {
-      console.error('Error al actualizar un animal:', error);
+      console.error('Error al actualizar un post:', error);
       handleErrorGeneric(res, 'Error al actualizar', error);
     }
   }  
  
   async changeStateArchived(req: Request, res: Response): Promise<void> {
     try {
-      const { animalId } = req.body;
-      if(animalId)
-        await this._animalService.changeState(animalId, PostStates.Archived);
+      const { id, contentType } = req.body;
+      await this._service.changeState(id, contentType, PostStates.Rejected);
       handleResOK(res);
     } catch (error) {
-      console.error('Error al actualizar un animal:', error);
+      console.error('Error al actualizar un post:', error);
       handleErrorGeneric(res, 'Error al actualizar', error);
     }
   }   
 
   async changeStateDraft(req: Request, res: Response): Promise<void> {
     try {
-      const { animalId } = req.body;
-      if(animalId)
-        await this._animalService.changeState(animalId, PostStates.Draft);
+      const { id, contentType } = req.body;
+      await this._service.changeState(id, contentType, PostStates.Draft);
       handleResOK(res);
     } catch (error) {
-      console.error('Error al actualizar un animal:', error);
+      console.error('Error al actualizar un post:', error);
       handleErrorGeneric(res, 'Error al actualizar', error);
     }
   }  
