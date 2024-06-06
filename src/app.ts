@@ -17,9 +17,9 @@ app.use(express.json());
 
 app.use('/api/auth', userRoutes);
 app.use('/api/permissions', permissionRoutes);
-app.use('/api/advertisement', advertisementRoutes);
+app.use('/api/advertisements', advertisementRoutes);
 app.use('/api/animals', animalRoutes);
-app.use('/api/caregiver', caregiverRoutes);
+app.use('/api/caregivers', caregiverRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/atributes', atributesRoutes);
 app.use('/api/zones', zoneRoutes);

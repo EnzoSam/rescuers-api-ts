@@ -1,9 +1,10 @@
+import { PostStates } from "../../constants/animals/posts.constant";
 import { BaseModel } from "../base/base.model";
 
 interface ICaregiver extends BaseModel {
     userId: string;
-    specialty: string;
-    averageRating: number;
+    presentation:string
+    state:PostStates    
   }
   
   export default ICaregiver;
