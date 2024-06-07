@@ -7,12 +7,13 @@ import jwt from 'jsonwebtoken';
 import { handleError, handleErrorGeneric, handleExeption } from '../../handlers/error.handler';
 import { IResult } from '../../interfaces/iresult.interface';
 import { handleCreatedOk, handleOK, handleResOK } from '../../handlers/response.handler';
+import { IFileUploader } from '../../interfaces/services/IFileUploader.interface';
 
 class UserController {
 
   service:UserService;
 
-  constructor(_userService:UserService)
+  constructor(_userService:UserService,private _uploader:IFileUploader)
   {
     this.service = _userService;
   }
@@ -113,9 +114,8 @@ class UserController {
     try {
       const { email, password } = req.body;
       const token = await this.service.loginUser(email, password);
-
       if (token) {
-        res.status(200).json({ token });
+        handleCreatedOk(res, token);
       } else {
         res.status(401).json({message: 'Credenciales incorrectas.'});
       }
@@ -170,6 +170,38 @@ class UserController {
       handleErrorGeneric(res, 'Error interno del servidor', error);
     }
   } 
+
+  async getByEmail(req: Request, res: Response): Promise<void> {
+    try {
+
+      const { email } = req.params;
+      const unique = await this.service.getUserByEmail(email);
+      handleOK(res, unique);
+    } catch (error) {
+      console.error('Error al obtener user por email.', error);
+      handleErrorGeneric(res, "Error interno del servidor.", error);
+    }
+  }  
+
+  async uploadImages(req: Request, res: Response): Promise<void> {
+    try {
+
+      if (req.file) {
+        const imageBuffers: Buffer = req.file.buffer;
+
+        if (imageBuffers.length === 0) {
+          handleError(res, 500,'No se proporcionaron imagenes.', {});
+        }
+        else{
+          const imageUrls = await this._uploader.uploadFile(req.file, 'users');
+          handleOK(res, imageUrls)
+        }
+      }
+    } catch (error) {
+      console.error('Error al cargar las imágenes:', error);
+      handleErrorGeneric(res, 'Error al subir imagen', error);
+    }
+  }  
 }  
 
 

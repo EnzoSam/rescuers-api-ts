@@ -6,6 +6,7 @@ interface IAnimal extends BaseModel {
     image?:string
     description?:string
     state:number
+    lost:boolean
     atributes:string[]
   }
   

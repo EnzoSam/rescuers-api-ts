@@ -9,13 +9,8 @@ import { IAtributeRepository } from '../interfaces/repositories/general/iAtribut
 import { AtributeRepository } from '../repositories/general/atribute.repository';
 
 const router = express.Router();
-
-
-// Configuración de multer para la carga de archivos
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
-
 
 const uploader:IFileUploader = new FirestoreUploader();
 const repository:IAtributeRepository = new AtributeRepository('atributes');

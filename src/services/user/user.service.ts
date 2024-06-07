@@ -87,6 +87,7 @@ class UserService {
           name: name,
           lastName: lastName,
           password: hashedPassword,
+          image:'',
           emailVerificationAttempts: 0,
           emailConfirmationToken: emailConfirmationToken,
           roles:[ROLES.USER],
