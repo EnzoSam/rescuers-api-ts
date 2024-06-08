@@ -1,7 +1,6 @@
 import { ContentsType, PostStates } from '../../constants/animals/posts.constant';
 import { AtributesGroup } from '../../constants/general/atributes.constant';
 import { IFilter } from '../../interfaces/ifilter.interface';
-import IAnimal from '../../models/animals/ianimal.interface';
 import IPost from '../../models/animals/ipost.interface';
 import AtributeService from '../general/atribute.service';
 import AnimalService from './animal.service';

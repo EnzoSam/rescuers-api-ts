@@ -8,7 +8,9 @@ export class AnimalRepository
 extends BaseFirestoreRepository<IAnimal> implements IAnimalRepository {
 
     async filter(filter: IFilter | undefined): Promise<IAnimal[]> {
-        let q = this.collection.where('state','==', filter?.state || PostStates.Published);
+        let q = this.collection.where
+        ('state','==', filter?.state || PostStates.Published);
+        q = q.where('lost', '==', filter?.lost); 
         if(filter && filter?.atributes && filter.atributes.length > 0)
             q = q.where('atributes', 'array-contains-any', filter?.atributes);        
         const snapshot = await q.get();

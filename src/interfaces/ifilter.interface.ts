@@ -6,4 +6,5 @@ export interface IFilter
     pageTo:number
     atributes:string[]  
     state:PostStates
+    lost:boolean
 }
