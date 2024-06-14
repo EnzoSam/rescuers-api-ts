@@ -5,7 +5,7 @@ interface User extends BaseModel{
     name: string
     lastName: string
     email: string
-    password: string
+    password?: string
     image:string
     contacts:IContact[]
     roles: number[]

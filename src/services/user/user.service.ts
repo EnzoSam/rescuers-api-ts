@@ -27,6 +27,8 @@ class UserService {
   async getById(id:any): Promise<User | null> {
 
     const allItems = await this.repository.getById(id);
+    if(allItems)
+      delete allItems.password;
     return allItems;
   }
 
@@ -156,7 +158,7 @@ class UserService {
   async verifyPassword(email: string, password: string): Promise<boolean> {
     const user = await this.getUserByEmail(email);
 
-    return user ? bcrypt.compare(password, user.password) : false;
+    return user ? bcrypt.compare(password, user.password || '') : false;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
@@ -168,7 +170,7 @@ class UserService {
     const user = await this.getUserByEmail(email);
 
     if (user) {
-      if (user && (await bcrypt.compare(password, user.password))) {
+      if (user && (await bcrypt.compare(password, user.password || ''))) {
         return jwt.sign({ userId: user.id, email: user.email, roles:user.roles }, 
            process.env.JWT_SECRET || '1a1aa4a5a5::;;;', { expiresIn: '120d' });
       }
