@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "set NODE_ENV=production&& node index.ts",
     "dev": "nodemon ./index.ts",
-    "prod": "set NODE_ENV=production&& nodemon -L index.ts",
-    "build": "tsc"
+    "start": "nodemon src/index.ts", //====> path should be like this
+    "build": "rimraf dist && tsc",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
