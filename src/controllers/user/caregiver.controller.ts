@@ -34,10 +34,23 @@ class CaregiverController {
     }
   }
 
-  async create(req: Request, res: Response): Promise<void> {
+  async byuseremail(req: Request, res: Response): Promise<void> {
     try {
-      const atribute = req.body;
-      let created = await this.service.create(atribute);
+
+      const { email } = req.params;
+      const unique = await this.service.getByUserEmail(email);
+      handleOK(res, unique);
+    } catch (error) {
+      console.error('Error al obtener por id.', error);
+      handleErrorGeneric(res, "Error interno del servidor.", error);
+    }
+  }
+
+  async create(req: any, res: Response): Promise<void> {
+    try {
+      const caregiver = req.body;
+      const userId = req.user.userId;
+      let created = await this.service.create(caregiver, userId);
       handleCreatedOk(res, created);
     } catch (error) {
       console.error('Error al crear uno:', error);
