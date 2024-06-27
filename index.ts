@@ -7,6 +7,5 @@ import {app} from "./src/app";
 var PORT = process.env.PORT || 3990;
 
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`Servidor corriendo en puerto: ${PORT}`);
   });
-  
