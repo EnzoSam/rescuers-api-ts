@@ -7,6 +7,7 @@ import { FirestoreUploader } from '../services/base/firestoreUploader.service';
 import { IAnimalRepository } from '../interfaces/repositories/rescuers/iAnimalRepository.interface';
 import { AnimalRepository } from '../repositories/rescuers/animal.repository';
 import AnimalService from '../services/animal/animal.service';
+import imageMiddleware from '../middlewares/imageProcessing.middleware';
 
 const router = express.Router();
 
@@ -26,6 +27,6 @@ router.get('/:id', controller.get.bind(controller));
 router.post('/',authenticateToken, controller.create.bind(controller));
 router.delete('/:id',authenticateToken, controller.delete.bind(controller));
 router.put('/',authenticateToken, controller.update.bind(controller));
-router.post('/uploads',authenticateToken, upload.single('file'), controller.uploadImages.bind(controller));
+router.post('/uploads',authenticateToken,imageMiddleware, upload.single('file'), controller.uploadImages.bind(controller));
 
 export default router;
