@@ -10,12 +10,12 @@ const imageMiddleware = async (req: Request, res: Response, next: NextFunction) 
 
     const data = await exifr.parse(req.file.buffer);
     const imageBufferWithoutExif = await sharp(req.file.buffer)
-      .removeMetadata()
+      .withMetadata({}) 
       .toBuffer();
 
     const optimizedImage = await sharp(imageBufferWithoutExif)
       .resize({ width: 800 }) 
-      .quality(80)
+      .jpeg({ quality: 80 })
       .toBuffer();
 
     req.file.buffer = optimizedImage;
