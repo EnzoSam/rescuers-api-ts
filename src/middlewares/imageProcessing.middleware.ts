@@ -5,7 +5,7 @@ import exifr from 'exifr';
 const imageMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.file) {
-      return next(new Error('No file uploaded.'));
+      return next(new Error('No se ha pasado ningun archivo.'));
     }
 
     const data = await exifr.parse(req.file.buffer);
