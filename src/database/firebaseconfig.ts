@@ -16,7 +16,7 @@ export default () =>
         universe_domain: process.env.UNIVERSE_DOMAIN,
         storageBucket:process.env.STORAGE_BUCKET
       };
-    
+
     admin.initializeApp(
         {
           credential: admin.credential.cert(serviceAccount),
