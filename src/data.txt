@@ -3,7 +3,7 @@ Usuario:
 Atributos: ID, nombre de usuario, correo electrónico, contraseña, información de contacto (teléfono, dirección), esCuidador (booleano), calificación, etc.
 Métodos: registrar(), iniciarSesion(), cerrarSesion(), editarPerfil(), cargarDatosPersonales(), obtenerCuidadores(), obtenerCalificaciones(), etc.
 Animal:
-
+ 
 Atributos: ID, nombre, tipo (perro, gato, etc.), raza, edad, género, descripción, estado de adopción, imágenes, ubicación, fecha de publicación, etc.
 Métodos: publicar(), editar(), eliminar(), marcarComoAdoptado(), cargarUbicacion(), obtenerDetalles(), etc.
 Publicación:
