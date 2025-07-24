@@ -46,6 +46,12 @@ class AnimalService {
     return allItems;
   }  
 
+  async count(filter:IFilter | undefined):Promise<number>
+  {
+    const c = await this.repository.count(filter);
+    return c;
+  } 
+
   async changeState(id: string, _state:PostStates): Promise<void> {
     let a =  await this.getById(id);
     if(a)

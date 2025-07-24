@@ -78,7 +78,13 @@ class PostController {
         filter = req.body as IFilter;
       
       const all = await this._service.filter(filter);
-      handleOK(res, all);
+      const count = await this._service.count(filter);
+
+      const data = {
+        posts:all,
+        totalCount:count
+      }
+      handleOK(res, data);
     } catch (error) {
       console.error('Error al obtener los post:', error);
       handleErrorGeneric(res, 'Error al obtener todos', error);

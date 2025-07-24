@@ -13,10 +13,15 @@ class PostService {
     {
     }
 
+    async count(filter:IFilter | undefined):Promise<number>
+    {
+        return await this._animalService.count(filter);
+    }
+
     async filter(filter:IFilter | undefined):Promise<IPost[]>
     {
        let atributes = await this._atributeService.getAll();
-       let animals = await this._animalService.filter(filter);
+       let animals = await this._animalService.filter(filter);       
        let posts:IPost[] = [];
 
         for(let animal of animals)
@@ -39,7 +44,8 @@ class PostService {
                 image: animal.image,
                 title: animal.name? animal.name : typeName,
                 contentType: ContentsType.Animal,
-                state: animal.state
+                state: animal.state,
+                postCategory:typeName
             }
 
             posts.push(animalPost);
