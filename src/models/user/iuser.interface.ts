@@ -11,7 +11,8 @@ interface User extends BaseModel{
     roles: number[]
     emailConfirmed: boolean
     emailConfirmationToken?: string
-    emailVerificationAttempts: number
+    emailVerificationAttempts: number,
+    zoneId:any
   }
   
   export default User;

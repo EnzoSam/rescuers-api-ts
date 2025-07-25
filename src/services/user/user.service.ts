@@ -94,7 +94,8 @@ class UserService {
           emailConfirmationToken: emailConfirmationToken,
           roles:[ROLES.USER],
           contacts:[],
-          emailConfirmed: false
+          emailConfirmed: false,
+          zoneId:3
         };
 
         await this.repository.create(user as User);
