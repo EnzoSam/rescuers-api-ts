@@ -11,11 +11,14 @@ import { AtributeRepository } from '../repositories/general/atribute.repository'
 import { CollectionsNames } from '../constants/database/database.constants';
 import validateRole from '../middlewares/role.middleware';
 import { ROLES } from '../constants/auth/roles.constant';
+import { IUserRepository } from '../interfaces/repositories/users/iUserRepository.interface';
+import { UserRepository } from '../repositories/users/user.repository';
 
 const router = express.Router();
 
 const repository:IAnimalRepository = new AnimalRepository(CollectionsNames.animals);
-const animalService:AnimalService = new AnimalService(repository);
+const userRepository:IUserRepository = new UserRepository('users');
+const animalService:AnimalService = new AnimalService(repository,userRepository);
 const atributeRepository:IAtributeRepository = new AtributeRepository(CollectionsNames.atributes);
 const atributeService:AtributeService = new AtributeService(atributeRepository)
 const service:PostService = new PostService(animalService, atributeService);

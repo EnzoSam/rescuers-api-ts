@@ -8,6 +8,8 @@ import { IAnimalRepository } from '../interfaces/repositories/rescuers/iAnimalRe
 import { AnimalRepository } from '../repositories/rescuers/animal.repository';
 import AnimalService from '../services/animal/animal.service';
 import imageMiddleware from '../middlewares/imageProcessing.middleware';
+import { IUserRepository } from  '../interfaces/repositories/users/iUserRepository.interface'
+import { UserRepository } from '../repositories/users/user.repository';
 
 const router = express.Router();
 
@@ -18,7 +20,8 @@ const upload = multer({ storage: storage });
 
 const uploader:IFileUploader = new FirestoreUploader();
 const repository:IAnimalRepository = new AnimalRepository('animals');
-const service:AnimalService = new AnimalService(repository);
+const userRepository:IUserRepository = new UserRepository('users');
+const service:AnimalService = new AnimalService(repository, userRepository);
 const controller:AnimalController = new AnimalController(service,uploader);
 
 router.get('/', controller.getAll.bind(controller));

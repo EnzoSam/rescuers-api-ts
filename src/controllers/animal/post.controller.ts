@@ -15,10 +15,12 @@ class PostController {
   {
   }
 
-  async changeStateRevision(req: Request, res: Response): Promise<void> {
+  async changeStateRevision(req: any, res: Response): Promise<void> {
     try {
       const { id, contentType } = req.body;
-      await this._service.changeState(id, contentType, PostStates.PendingReview);
+       let {userId} = req.user;
+      await this._service.changeState
+      (id, contentType, PostStates.PendingReview, userId);
       handleResOK(res);
     } catch (error) {
       console.error('Error al actualizar un post:', error);
@@ -26,10 +28,12 @@ class PostController {
     }
   }
 
-  async changeStatePublished(req: Request, res: Response): Promise<void> {
+  async changeStatePublished(req: any, res: Response): Promise<void> {
     try {
       const { id, contentType } = req.body;
-      await this._service.changeState(id, contentType, PostStates.Published);
+      let {userId} = req.user;
+      await this._service.changeState
+      (id, contentType, PostStates.Published, userId);
       handleResOK(res);
     } catch (error) {
       console.error('Error al actualizar un post:', error);
@@ -37,10 +41,12 @@ class PostController {
     }
   }
 
-  async changeStateRejected(req: Request, res: Response): Promise<void> {
+  async changeStateRejected(req: any, res: Response): Promise<void> {
     try {
       const { id, contentType } = req.body;
-      await this._service.changeState(id, contentType, PostStates.Rejected);
+      let {userId} = req.user;
+      await this._service.changeState
+      (id, contentType, PostStates.Rejected, userId);
       handleResOK(res);
     } catch (error) {
       console.error('Error al actualizar un post:', error);
@@ -48,10 +54,12 @@ class PostController {
     }
   }  
  
-  async changeStateArchived(req: Request, res: Response): Promise<void> {
+  async changeStateArchived(req: any, res: Response): Promise<void> {
     try {
       const { id, contentType } = req.body;
-      await this._service.changeState(id, contentType, PostStates.Rejected);
+      let {userId} = req.user;
+      await this._service.changeState
+      (id, contentType, PostStates.Archived,userId);
       handleResOK(res);
     } catch (error) {
       console.error('Error al actualizar un post:', error);
@@ -59,10 +67,12 @@ class PostController {
     }
   }   
 
-  async changeStateDraft(req: Request, res: Response): Promise<void> {
+  async changeStateDraft(req: any, res: Response): Promise<void> {
     try {
       const { id, contentType } = req.body;
-      await this._service.changeState(id, contentType, PostStates.Draft);
+      let {userId} = req.user;
+      await this._service.changeState
+      (id, contentType, PostStates.Draft, userId);
       handleResOK(res);
     } catch (error) {
       console.error('Error al actualizar un post:', error);

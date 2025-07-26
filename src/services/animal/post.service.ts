@@ -53,10 +53,13 @@ class PostService {
        return posts;
     }
 
-    async changeState(id:any, contentType: ContentsType, newState:PostStates)
+    async changeState(id:any, 
+        contentType: ContentsType, 
+        newState:PostStates,
+        userId:any)
     {
         if(contentType === ContentsType.Animal)
-            await this._animalService.changeState(id, newState);
+            await this._animalService.changeState(id, newState, userId);
     }
 }
 

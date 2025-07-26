@@ -2,11 +2,14 @@ import IAnimal from '../../models/animals/ianimal.interface';
 import { IAnimalRepository } from '../../interfaces/repositories/rescuers/iAnimalRepository.interface';
 import { IFilter } from '../../interfaces/ifilter.interface';
 import { PostStates } from '../../constants/animals/posts.constant';
+import { IUserRepository } from  '../../interfaces/repositories/users/iUserRepository.interface'
 
 class AnimalService {
 
   repository:IAnimalRepository;
-  constructor(_repository:IAnimalRepository)
+  constructor(_repository:IAnimalRepository,
+    private userRepository:IUserRepository
+  )
   {
     this.repository = _repository;
   }
@@ -52,12 +55,20 @@ class AnimalService {
     return c;
   } 
 
-  async changeState(id: string, _state:PostStates): Promise<void> {
+  async changeState(id: string, _state:PostStates, _userId:any): Promise<void> {
     let a =  await this.getById(id);
     if(a)
     {
-      a.state = _state;
-      await this.update(id, a);
+      
+      let user = await this.userRepository.getById(_userId);
+      if(a.userId === _userId || (user && user.roles.includes(2)))
+      {
+        a.state = _state;
+        await this.update(id, a);
+      }
+      else{
+        throw new Error('Solo puede ser modificado por el dueño.');
+      }
     }
     else
     {

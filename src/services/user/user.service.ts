@@ -8,6 +8,7 @@ import { IInitRegisterResponse } from '../../interfaces/initregisterresponse.int
 import { IResult } from '../../interfaces/iresult.interface';
 import { IUserRepository } from '../../interfaces/repositories/users/iUserRepository.interface';
 import { ROLES } from '../../constants/auth/roles.constant';
+import { ILoginData } from '../../models/user/login-data.interface';
   
 class UserService {
 
@@ -167,13 +168,15 @@ class UserService {
     return user;
   }
 
-  async loginUser(email: string, password: string): Promise<string | null> {
+  async loginUser(email: string, password: string): 
+  Promise<ILoginData | null> {
     const user = await this.getUserByEmail(email);
 
     if (user) {
       if (user && (await bcrypt.compare(password, user.password || ''))) {
-        return jwt.sign({ userId: user.id, email: user.email, roles:user.roles }, 
+        const token = await jwt.sign({ userId: user.id, email: user.email, roles:user.roles }, 
            process.env.JWT_SECRET || '1a1aa4a5a5::;;;', { expiresIn: '120d' });
+           return {token, sub:user.id}
       }
     }
     else

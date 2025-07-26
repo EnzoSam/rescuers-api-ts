@@ -114,7 +114,7 @@ class UserController {
     try {
       const { email, password } = req.body;
       const token = await this.service.loginUser(email, password);
-      if (token) {
+      if (token && token.token) {
         handleCreatedOk(res, token);
       } else {
         res.status(401).json({message: 'Credenciales incorrectas.'});
