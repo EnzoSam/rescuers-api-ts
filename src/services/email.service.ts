@@ -16,6 +16,7 @@ class EmailService {
 
   async sendConfirmationEmail(to: string, token: string): Promise<void> {
 
+    console.log('sending mail...')
     const mailOptions = {
       from: process.env.SMTP_MAIL,
       to,
@@ -24,6 +25,8 @@ class EmailService {
     };
 
     await this.transporter.sendMail(mailOptions);
+
+    console.log('mail sended')
   }
 
   async sendMail(to: string, subject:string, body: string): Promise<void> {

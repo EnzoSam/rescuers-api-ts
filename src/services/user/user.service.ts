@@ -99,13 +99,28 @@ class UserService {
           zoneId:3
         };
 
-        await this.repository.create(user as User);
+        console.log('creating user')
+        const idCreated = await this.repository.create(user as User);
+        console.log('user created')
+        
+        try{
         await emailService.sendConfirmationEmail(email, emailConfirmationToken);
+        }
+        catch(smtError:any)
+        {
+          console.log('eliminando usuario por error de envio de mail');
+          this.repository.delete(idCreated)
+          response.statusCode = 500;
+          response.message = "No se pudo enviar el correo de confirmación.";
+          reject(response);
+          return
+        }
         response.statusCode = 200;
         response.message = 'Inicio de registro correcto. Verificar correo electrónico para continuar.'
         resolve(response);
       }
       catch (ex: any) {
+        console.error('Error en registro', ex);
         response.statusCode = 500;
         response.message = ex.message;
         reject(response);
