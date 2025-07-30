@@ -29,6 +29,21 @@ class EmailService {
     console.log('mail sended')
   }
 
+  async sendResetPasswordEmail(to: string, token: string): Promise<void> {
+
+    console.log('sending mail...')
+    const mailOptions = {
+      from: process.env.SMTP_MAIL,
+      to,
+      subject: 'Blanqueo de contraseña',
+      text: `Por favor, haga clic en el siguiente enlace para crear una nueva contraseña: ${process.env.FRONT_URL}auth/reset/${to}/${token}`,
+    };
+
+    await this.transporter.sendMail(mailOptions);
+
+    console.log('mail sended')
+  }  
+
   async sendMail(to: string, subject:string, body: string): Promise<void> {
 
     const mailOptions = {

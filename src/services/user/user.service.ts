@@ -214,7 +214,7 @@ class UserService {
       const token = await this.generateToken(email);
       user.emailConfirmationToken = token;
       await this.update(user.id, user);
-      await emailService.sendConfirmationEmail(email, token);
+      await emailService.sendResetPasswordEmail(email, token);
       result.code = 200;
       result.message = 'Email de reseteo enviado. Revise el correo para reestablecer la contraseña';
     }
