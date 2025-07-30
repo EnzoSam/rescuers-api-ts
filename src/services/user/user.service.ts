@@ -237,9 +237,10 @@ class UserService {
       if(user.emailConfirmationToken === token)
       {
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        user.emailConfirmationToken = hashedPassword;
+        user.password = hashedPassword;
+        user.emailConfirmationToken = ''
         await this.update(user.id,user);
-        await emailService.sendMail(email, "Cambio de password", "El cambio de password se realizó correctamente.");
+        await emailService.sendMail(email, "Cambio de contraseña", "El cambio de contraseña se realizó correctamente.");
         result.code = 200;
         result.message = 'Password actualizado';
       }
