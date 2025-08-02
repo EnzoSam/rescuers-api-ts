@@ -106,7 +106,7 @@ class UserService {
         if(phone)
         {
           const whatsapp :IContact[] =[{
-            cantact:phone,
+            contact:phone,
             type : 'whatsapp'
           }]
           user.contacts = whatsapp;
@@ -200,17 +200,16 @@ class UserService {
   Promise<ILoginData | null> {
     const user = await this.getUserByEmail(email);
 
-    if (user) {
-      if (user && (await bcrypt.compare(password, user.password || ''))) {
+    if (!user) 
+      throw new Error('El usuario no existe');
+    if(!user.emailConfirmed)
+      throw new Error('El usuario no ha validado su email');
+
+    if (user && (await bcrypt.compare(password, user.password || ''))) {
         const token = await jwt.sign({ userId: user.id, email: user.email, roles:user.roles }, 
            process.env.JWT_SECRET || '1a1aa4a5a5::;;;', { expiresIn: '120d' });
            return {token, sub:user.id}
-      }
-    }
-    else
-    {
-      throw new Error('El usuario no existe');
-    }
+      }      
 
     return null;
   }

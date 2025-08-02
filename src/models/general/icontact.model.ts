@@ -1,5 +1,5 @@
 export interface IContact
 {
-    cantact:string
+    contact:string
     type:string
 }
