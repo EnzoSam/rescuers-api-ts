@@ -76,9 +76,9 @@ class UserController {
 
   async registerUser(req: Request, res: Response): Promise<void> {
     try {
-      const { email, name, lastName, password } = req.body;
+      const { email, name, lastName, password, phone } = req.body;
       let registerResponse = await this.service.registerUser
-      (email, name, lastName, password);
+      (email, name, lastName, password, phone);
 
       res.status(registerResponse.statusCode).send(registerResponse);
     } catch (error) {

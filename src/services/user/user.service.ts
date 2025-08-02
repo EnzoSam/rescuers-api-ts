@@ -9,6 +9,7 @@ import { IResult } from '../../interfaces/iresult.interface';
 import { IUserRepository } from '../../interfaces/repositories/users/iUserRepository.interface';
 import { ROLES } from '../../constants/auth/roles.constant';
 import { ILoginData } from '../../models/user/login-data.interface';
+import { IContact } from '../../models/general/icontact.model';
   
 class UserService {
 
@@ -56,7 +57,8 @@ class UserService {
     return token;
   }
 
-  async registerUser(email: string, name: string, lastName: string, password: string): Promise<IInitRegisterResponse> {
+  async registerUser(email: string, name: string, 
+    lastName: string, password: string, phone:string | undefined): Promise<IInitRegisterResponse> {
 
     return new Promise(async (resolve, reject) => {
       let response: IInitRegisterResponse = {
@@ -85,6 +87,8 @@ class UserService {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        
+
         const user:User = {
           email: email,
           name: name,
@@ -98,6 +102,15 @@ class UserService {
           emailConfirmed: false,
           zoneId:3
         };
+
+        if(phone)
+        {
+          const whatsapp :IContact[] =[{
+            cantact:phone,
+            type : 'whatsapp'
+          }]
+          user.contacts = whatsapp;
+        }
 
         console.log('creating user')
         const idCreated = await this.repository.create(user as User);
