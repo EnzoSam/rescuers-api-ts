@@ -80,15 +80,20 @@ class PostController {
     }
   }  
 
-  async filter(req: Request, res: Response): Promise<void> 
+  async filter(req: any, res: any): Promise<void> 
   {
     try {
+
+      let {userId} = req.user;
       let filter:IFilter | undefined = undefined;
       if(req.body)
         filter = req.body as IFilter;
       
-      const all = await this._service.filter(filter);
-      const count = await this._service.count(filter);
+      if(!filter.onlyOwenerPublished)
+        userId = undefined;
+
+      const all = await this._service.filter(filter, userId);
+      const count = await this._service.count(filter,userId);
 
       const data = {
         posts:all,

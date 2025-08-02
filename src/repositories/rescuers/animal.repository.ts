@@ -7,7 +7,7 @@ import { BaseFirestoreRepository } from "../baseFirestore.repository";
 export class AnimalRepository 
 extends BaseFirestoreRepository<IAnimal> implements IAnimalRepository {
 
-    async count(filter: IFilter | undefined): Promise<number> {
+    async count(filter: IFilter | undefined, userId: any | undefined): Promise<number> {
         let q = this.collection.where(
             'state', '==', filter?.state || PostStates.Published
         );
@@ -15,6 +15,11 @@ extends BaseFirestoreRepository<IAnimal> implements IAnimalRepository {
 
         if (filter && filter.atributes && filter.atributes.length > 0) {
             q = q.where('atributes', 'array-contains-any', filter.atributes); 
+        }
+
+        if(userId)
+        {
+            q = q.where('userId','==', userId);
         }
 
         try {
@@ -26,7 +31,7 @@ extends BaseFirestoreRepository<IAnimal> implements IAnimalRepository {
         }
     }
 
-    async filter(filter: IFilter | undefined): Promise<IAnimal[]> {
+    async filter(filter: IFilter | undefined, userId: any | undefined): Promise<IAnimal[]> {
         let q = this.collection.where(
             'state', '==', filter?.state || PostStates.Published
         );
@@ -34,6 +39,11 @@ extends BaseFirestoreRepository<IAnimal> implements IAnimalRepository {
 
         if (filter && filter.atributes && filter.atributes.length > 0) {
             q = q.where('atributes', 'array-contains-any', filter.atributes); 
+        }
+
+        if(userId)
+        {
+            q = q.where('userId','==', userId);
         }
 
         if (filter && typeof filter.pageIndex === 'number' && typeof filter.pageSize === 'number') {

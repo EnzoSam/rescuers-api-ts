@@ -6,5 +6,6 @@ export interface IFilter
     pageSize:number
     atributes:string[]  
     state:PostStates
-    lost:boolean
+    lost:boolean,
+    onlyOwenerPublished:boolean
 }

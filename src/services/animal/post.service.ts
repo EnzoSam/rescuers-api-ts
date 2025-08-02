@@ -13,15 +13,15 @@ class PostService {
     {
     }
 
-    async count(filter:IFilter | undefined):Promise<number>
+    async count(filter:IFilter | undefined, userId:any | undefined):Promise<number>
     {
-        return await this._animalService.count(filter);
+        return await this._animalService.count(filter, userId);
     }
 
-    async filter(filter:IFilter | undefined):Promise<IPost[]>
+    async filter(filter:IFilter | undefined, userId:any | undefined):Promise<IPost[]>
     {
        let atributes = await this._atributeService.getAll();
-       let animals = await this._animalService.filter(filter);       
+       let animals = await this._animalService.filter(filter, userId);       
        let posts:IPost[] = [];
 
         for(let animal of animals)

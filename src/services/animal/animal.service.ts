@@ -43,15 +43,15 @@ class AnimalService {
     await this.repository.delete(id);
   }
 
-  async filter(filter:IFilter | undefined):Promise<IAnimal[]>
+  async filter(filter:IFilter | undefined, userId:any | undefined):Promise<IAnimal[]>
   {
-    const allItems = await this.repository.filter(filter);
+    const allItems = await this.repository.filter(filter, userId);
     return allItems;
   }  
 
-  async count(filter:IFilter | undefined):Promise<number>
+  async count(filter:IFilter | undefined, userId:any | undefined):Promise<number>
   {
-    const c = await this.repository.count(filter);
+    const c = await this.repository.count(filter, userId);
     return c;
   } 
 

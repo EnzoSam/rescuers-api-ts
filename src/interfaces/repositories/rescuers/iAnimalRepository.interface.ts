@@ -4,6 +4,6 @@ import { IBaseRepository } from "../irepository.interface";
 
 export interface IAnimalRepository extends IBaseRepository<IAnimal>
 {
-    filter(filter:IFilter | undefined): Promise<IAnimal[]>;    
-    count(filter:any):Promise<number>
+    filter(filter:IFilter | undefined, userId: any | undefined): Promise<IAnimal[]>;    
+    count(filter:any, userId: any | undefined):Promise<number>
 }
