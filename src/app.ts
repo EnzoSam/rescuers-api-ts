@@ -9,18 +9,19 @@ import atributesRoutes from './routes/atribute.route';
 import zoneRoutes from './routes/zone.route';
 import usefullRoutes from './routes/usefulData.route';
 import cors from "cors";
+import userContext from './middlewares/user-context.middleware';
 
 const app = express();
 app.use(cors());
 
 app.use(express.json());
 
-app.use('/api/auth', userRoutes);
+app.use('/api/auth',userRoutes);
 app.use('/api/permissions', permissionRoutes);
 app.use('/api/advertisements', advertisementRoutes);
-app.use('/api/animals', animalRoutes);
+app.use('/api/animals',userContext, animalRoutes);
 app.use('/api/caregivers', caregiverRoutes);
-app.use('/api/posts', postRoutes);
+app.use('/api/posts',userContext, postRoutes);
 app.use('/api/atributes', atributesRoutes);
 app.use('/api/zones', zoneRoutes);
 app.use('/api/usefuldata', usefullRoutes);

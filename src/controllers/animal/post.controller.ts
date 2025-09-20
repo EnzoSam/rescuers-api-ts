@@ -84,7 +84,7 @@ class PostController {
   {
     try {
 
-      let {userId} = req.user;
+      let userId = req.user?.userId;
       let filter:IFilter | undefined = undefined;
       if(req.body)
         filter = req.body as IFilter;

@@ -1,6 +1,5 @@
 import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import IRequestAuth from '../interfaces/iRequestAuth.interface';
 import User from '../models/user/iuser.interface';
 import { handleError } from '../handlers/error.handler';
 

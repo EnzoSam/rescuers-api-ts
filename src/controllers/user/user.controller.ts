@@ -202,6 +202,17 @@ class UserController {
       handleErrorGeneric(res, 'Error al subir imagen', error);
     }
   }  
+
+  async refreshToken(req: Request, res: Response): Promise<void> {
+    try {
+      const { refreshToken } = req.body;
+      let r = await this.service.refreshToken(refreshToken);
+      res.status(200).json(r);
+    } catch (error) {
+      console.error('Error en la pericion refresh token:', error);
+      handleErrorGeneric(res, 'Error interno del servidor', error);
+    }
+  }  
 }  
 
 
