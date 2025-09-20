@@ -43,6 +43,9 @@ class UserService {
   }
 
   async update(id: string, updates: Partial<User>): Promise<void> {
+
+    if(updates.contacts)
+      updates.contacts = updates.contacts.filter(c=>c.contact);    
     await this.repository.update(id, updates);
   }
 
