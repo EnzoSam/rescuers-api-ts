@@ -24,6 +24,7 @@ router.post('/no-auth/login', controller.loginUser.bind(controller));
 router.post('/no-auth/request-reset-password', controller.requestResetPassword.bind(controller));
 router.post('/no-auth/change-password', controller.changePassword.bind(controller));
 router.post('/no-auth/refresh-token', controller.refreshToken.bind(controller));
+router.post('/no-auth/logout', controller.logout.bind(controller));
 
 
 router.get('/roles', authenticateToken,controller.getRoles.bind(controller));

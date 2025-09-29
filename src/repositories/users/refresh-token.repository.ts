@@ -20,7 +20,8 @@ export class RefreshTokenrRepository
 
     async deleteByToken(token: string): Promise<void> {
         const refreshToken = await this.getByToken(token)
-        await this.delete(refreshToken.id);
+        if(refreshToken)
+            await this.delete(refreshToken.id);
     }
 
 }

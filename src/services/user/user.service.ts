@@ -231,7 +231,7 @@ class UserService {
 
     const token = await jwt.sign(
       { userId: user.id, email: user.email, roles: user.roles },
-      process.env.JWT_SECRET || '1a1aa4a5a5::;;;', { expiresIn: '1h' });
+      process.env.JWT_SECRET || '1a1aa4a5a5::;;;', { expiresIn: '10s' });
     return { token, sub: user.id, refreshToken }
   }
 
@@ -325,6 +325,14 @@ class UserService {
 
     const newLogin = await this.generateNewLogin(user)
     return newLogin
+  }
+
+  async logout(refreshToken:string) : Promise<void>
+  {
+    if(!refreshToken)
+      return;
+
+    this._refreshTokenRepository.deleteByToken(refreshToken);
   }
 }
 

@@ -205,7 +205,9 @@ class UserController {
 
   async refreshToken(req: Request, res: Response): Promise<void> {
     try {
+      
       const { refreshToken } = req.body;
+      console.log(refreshToken)
       let r = await this.service.refreshToken(refreshToken);
       res.status(200).json(r);
     } catch (error) {
@@ -213,6 +215,17 @@ class UserController {
       handleErrorGeneric(res, 'Error interno del servidor', error);
     }
   }  
+
+  async logout(req: Request, res: Response): Promise<void> {
+    try {
+      const { refreshToken } = req.body;
+      await this.service.logout(refreshToken);
+      res.status(200).json({message:'Sesión cerrada correctamente.'});
+    } catch (error) {
+      console.error('Error en la pericion logout', error);
+      handleErrorGeneric(res, 'Error interno del servidor', error);
+    }
+  }    
 }  
 
 

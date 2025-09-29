@@ -8,7 +8,7 @@ const secretKey = process.env.JWT_SECRET || '1a1aa4a5a5::;;;';
 function authenticateToken(req: any, res: Response, next: NextFunction): void {
   
   const token = req.header('Authorization')?.split(' ')[1];
-
+  console.log(token)
   if (!token) {
     res.status(401).json({ error: 'No se proporcionó un token de autenticación.' });
     return;
