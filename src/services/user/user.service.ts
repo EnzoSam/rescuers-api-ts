@@ -177,7 +177,15 @@ class UserService {
     }
 
     if (user.emailVerificationAttempts >= 5) {
-      throw new Error('El correo electrónico está bloqueado debido a demasiados intentos.');
+      throw new Error
+      ('El correo electrónico está bloqueado debido a demasiados intentos.' + 
+        'Contacte a: ' + process.env.SMTP_MAIL
+      );
+    }
+
+    if(user.emailConfirmed)
+    {
+      throw new Error('El usuario ya validó su email.');
     }
 
     const newToken = await this.generateToken(email);
@@ -334,6 +342,7 @@ class UserService {
 
     this._refreshTokenRepository.deleteByToken(refreshToken);
   }
+
 }
 
 export default UserService;

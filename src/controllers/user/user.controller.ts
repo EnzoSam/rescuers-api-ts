@@ -132,7 +132,7 @@ class UserController {
       let r = await this.service.requesResetPassword(email);
       res.status(r.code).json(r);
     } catch (error) {
-      console.error('Error en la pericion de reseto de password:', error);
+      console.error('Error en la peticion de reseto de password:', error);
       handleErrorGeneric(res, 'Error interno del servidor', error);
     }
   }
@@ -226,6 +226,18 @@ class UserController {
       handleErrorGeneric(res, 'Error interno del servidor', error);
     }
   }    
+
+  async resendVerificationMail(req: Request, res: Response): Promise<void> {
+    try {
+      const { mail } = req.body;
+      await this.service.resendVerificationEmail(mail);
+      res.status(200).json({statusCode:200,
+        message:'Se reenvió el correo.'});
+    } catch (error) {
+      console.error('Error en la pericion logout', error);
+      handleErrorGeneric(res, error.message || 'Error interno del servidor', error);
+    }
+  }      
 }  
 
 
